@@ -155,10 +155,4 @@ class _IndexPageState extends State<IndexPage> {
         break;
     }
   }
-  // }
-
-  Future<void> _handelPermission(Permission permission) async {
-    final status = await permission.request();
-    log(status.toString());
-  }
 }
