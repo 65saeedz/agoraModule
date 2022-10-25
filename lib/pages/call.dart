@@ -2,19 +2,15 @@ import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as rtc_local_value;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as rtc_remote_value;
 import 'package:flutter/material.dart';
-import '../clients/settings.dart';
 
 class CallPage extends StatefulWidget {
-  final String? channelName;
-  final joinedUser;
+  final RtcEngine agoraEngine;
   final ClientRole? role;
-  final String agoraToken;
+
   const CallPage({
-    required this.joinedUser,
     Key? key,
-    required this.channelName,
-    required this.agoraToken,
-    this.role,
+    required this.agoraEngine,
+    this.role = ClientRole.Broadcaster,
   }) : super(key: key);
 
   @override
@@ -24,9 +20,10 @@ class CallPage extends StatefulWidget {
 class _CallPageState extends State<CallPage> {
   final _users = <int>[];
   final _infostring = <String>[];
+  String? _channel;
   bool muted = false;
   bool viewPanel = false;
-  late RtcEngine _engine;
+
   @override
   void initState() {
     super.initState();
@@ -36,34 +33,13 @@ class _CallPageState extends State<CallPage> {
   @override
   void dispose() {
     _users.clear();
-    _engine.leaveChannel();
-    _engine.destroy();
+    widget.agoraEngine.leaveChannel();
+    widget.agoraEngine.destroy();
     super.dispose();
   }
 
   Future<void> initialize() async {
-    if (appId.isEmpty) {
-      setState(() {
-        _infostring
-            .add('App ID missing,please provide your App ID in setting.dart');
-        _infostring.add('Agora engine is not starting');
-      });
-      return;
-    }
-    _engine = await RtcEngine.create(appId);
-    await _engine.enableVideo();
-    await _engine.setChannelProfile(ChannelProfile.LiveBroadcasting);
-    await _engine.setClientRole(widget.role!);
-    _addAgoraEventHandler();
-    VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
-    configuration.dimensions = const VideoDimensions(width: 1920, height: 1080);
-    await _engine.setVideoEncoderConfiguration(configuration);
-    await _engine.joinChannel(
-        widget.agoraToken, widget.channelName!, null, widget.joinedUser);
-  }
-
-  void _addAgoraEventHandler() {
-    _engine.setEventHandler(RtcEngineEventHandler(
+    widget.agoraEngine.setEventHandler(RtcEngineEventHandler(
       error: (code) {
         setState(() {
           final info = 'error :$code';
@@ -73,6 +49,7 @@ class _CallPageState extends State<CallPage> {
       joinChannelSuccess: (channel, uid, elapsed) {
         setState(() {
           final info = 'joined channel:$channel ,uid :$uid';
+          _channel = channel;
           _infostring.add(info);
         });
       },
@@ -105,17 +82,48 @@ class _CallPageState extends State<CallPage> {
     ));
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        actions: [
+          IconButton(
+              onPressed: () {
+                setState(() {
+                  viewPanel = !viewPanel;
+                });
+              },
+              icon: const Icon(Icons.info_outline))
+        ],
+        title: const Text('Agora'),
+        centerTitle: true,
+      ),
+      body: Center(
+        child: Stack(
+          children: [
+            _viewRows(),
+            _panel(),
+            _toolbar(),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _viewRows() {
     final List<StatefulWidget> list = [];
     if (widget.role == ClientRole.Broadcaster) {
       list.add(const rtc_local_value.SurfaceView());
     }
-    for (var uid in _users) {
-      list.add(rtc_remote_value.SurfaceView(
-        uid: uid,
-        channelId: widget.channelName!,
-      ));
-    }
+    if (_channel != null)
+      for (var uid in _users) {
+        list.add(rtc_remote_value.SurfaceView(
+          uid: uid,
+          channelId: _channel!,
+          // channelId: 'chat_88',
+        ));
+      }
     final views = list;
     return Column(
       children:
@@ -138,7 +146,7 @@ class _CallPageState extends State<CallPage> {
               setState(() {
                 muted = !muted;
               });
-              _engine.muteLocalAudioStream(muted);
+              widget.agoraEngine.muteLocalAudioStream(muted);
             }),
             shape: const CircleBorder(),
             elevation: 2,
@@ -166,7 +174,7 @@ class _CallPageState extends State<CallPage> {
           ),
           RawMaterialButton(
             onPressed: () {
-              _engine.switchCamera();
+              widget.agoraEngine.switchCamera();
             },
             shape: const CircleBorder(),
             elevation: 2,
@@ -225,34 +233,5 @@ class _CallPageState extends State<CallPage> {
                 ),
               )),
         ));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        actions: [
-          IconButton(
-              onPressed: () {
-                setState(() {
-                  viewPanel = !viewPanel;
-                });
-              },
-              icon: const Icon(Icons.info_outline))
-        ],
-        title: const Text('Agora'),
-        centerTitle: true,
-      ),
-      body: Center(
-        child: Stack(
-          children: [
-            _viewRows(),
-            _panel(),
-            _toolbar(),
-          ],
-        ),
-      ),
-    );
   }
 }

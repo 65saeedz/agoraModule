@@ -1,14 +1,15 @@
 import 'dart:async';
 import 'dart:developer';
+import 'package:agora15min/clients/agora_client.dart';
 import 'package:agora15min/models/agora_token_query.dart';
-import 'package:agora15min/models/agora_token_response.dart';
 import 'package:agora15min/clients/http_client.dart';
-import 'package:agora15min/clients/settings.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'call.dart';
 import 'package:flutter/material.dart';
+
+enum UserRole { callMaker, callReciver }
 
 class IndexPage extends StatefulWidget {
   const IndexPage({super.key});
@@ -100,7 +101,7 @@ class _IndexPageState extends State<IndexPage> {
                     });
                   }),
               RadioListTile(
-                  title: const Text('Call reciver '),
+                  title: const Text('Call receiver '),
                   value: UserRole.callReciver,
                   groupValue: userRole,
                   onChanged: (UserRole? value) {
@@ -117,32 +118,42 @@ class _IndexPageState extends State<IndexPage> {
   }
 
   Future<void> onJoin() async {
-    // setState(() {
-    //   (_channelController.text.isEmpty && userRole == UserRole.callReciver)
-    //       ? _validatorError = true
-    //       : _validatorError = false;
-    // });
-    // if (_channelController.text.isNotEmpty) {
-    final response = await HttpClient().fetchAgoraToken(AgoraTokenQuery(
-      token: _uidTokenController.text,
-      user_role_id: _peerUidController.text,
-      chanelName: _channelController.text,
-    ));
-    print(response.token);
-    print(response.chanelName);
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => CallPage(
-          agoraToken: response.token,
-          channelName: response.chanelName,
-          joinedUser: int.parse(_userUidController.text),
-          role: ClientRole.Broadcaster,
-        ),
-      ),
-    );
-    await _handelPermission(Permission.camera);
-    await _handelPermission(Permission.microphone);
+    final agoraClient = AgoraClient();
+    switch (userRole) {
+      case UserRole.callMaker:
+        await agoraClient.makeCall(
+          userId: _userUidController.text,
+          userToken: _uidTokenController.text,
+          peerId: _peerUidController.text,
+        );
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CallPage(
+              agoraEngine: agoraClient.engine,
+            ),
+          ),
+        );
+        break;
+      case UserRole.callReciver:
+        await agoraClient.receiveCall(
+          userId: _userUidController.text,
+          userToken: _uidTokenController.text,
+          peerId: _peerUidController.text,
+          channelName: _channelController.text,
+        );
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CallPage(
+              agoraEngine: agoraClient.engine,
+            ),
+          ),
+        );
+        break;
+      default:
+        break;
+    }
   }
   // }
 
