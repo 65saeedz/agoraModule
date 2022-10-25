@@ -6,14 +6,10 @@ import '../utils/settings.dart';
 
 class CallPage extends StatefulWidget {
   final String? channelName;
-  final joinedUser;
   final ClientRole? role;
-  final String agoraToken;
   const CallPage({
-    required this.joinedUser,
     Key? key,
-    required this.channelName,
-    required this.agoraToken,
+    this.channelName,
     this.role,
   }) : super(key: key);
 
@@ -58,8 +54,7 @@ class _CallPageState extends State<CallPage> {
     VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
     configuration.dimensions = const VideoDimensions(width: 1920, height: 1080);
     await _engine.setVideoEncoderConfiguration(configuration);
-    await _engine.joinChannel(
-        widget.agoraToken, widget.channelName!, null, widget.joinedUser);
+    await _engine.joinChannel(token, widget.channelName!, null, 0);
   }
 
   void _addAgoraEventHandler() {

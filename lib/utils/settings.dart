@@ -1,3 +1,6 @@
-const channelName1 = 'ch01';
-const appId = '08df0d77feda4c9198561561b756a303';
-const token = '007eJxTYEg47iHvmLdP8NI3w1W/LPf9VWU7fz9sWnX6uvO3GSWt4mMUGAwsUtIMUszN01JTEk2SLQ0tLUzNDIEoydzULNHYwHjmrtDkhkBGhv1xO5gZGSAQxGdhSM4wMGRgAABXjR8Q';
+//const channelName1 = 'channel';
+const appId = 'a5b85475a1e34748a324db9d58622d98';
+// const token =
+//     '006a5b85475a1e34748a324db9d58622d98IAB2z9BjWfTMRCzeeTFdj3FxDpvr7W9IjX2VxLlfS5pUDgqJILt/n4MeIgDObwiCSrJXYwQAAQDablZjAgDablZjAwDablZjBADablZj';
+// const uid = 91;
+enum UserRole{callMaker, callReciver}
