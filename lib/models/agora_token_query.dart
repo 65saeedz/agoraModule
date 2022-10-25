@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 class AgoraTokenQuery {
-  final String? chanelName;
   final String token;
   final String user_role_id;
-
+  final String? chanelName;
+  
   AgoraTokenQuery({
     required this.token,
     required this.user_role_id,
@@ -21,7 +21,6 @@ class AgoraTokenQuery {
       chanelName: chanelName ?? this.chanelName,
     );
   }
-
   Map<String, dynamic> toMap() {
     return {
       'token': token,
@@ -29,7 +28,6 @@ class AgoraTokenQuery {
       'chanelName': chanelName,
     };
   }
-
   factory AgoraTokenQuery.fromMap(Map<String, dynamic> map) {
     return AgoraTokenQuery(
       token: map['token'],
@@ -38,22 +36,18 @@ class AgoraTokenQuery {
     );
   }
   String toJson() => json.encode(toMap());
-  factory AgoraTokenQuery.fromJson(String source) =>
-      AgoraTokenQuery.fromMap(json.decode(source));
+  factory AgoraTokenQuery.fromJson(String source) => AgoraTokenQuery.fromMap(json.decode(source));
   @override
-  String toString() =>
-      'AgoraTokenQuery(token: $token, user_role_id: $user_role_id, chanelName: $chanelName)';
+  String toString() => 'AgoraTokenQuery(token: $token, user_role_id: $user_role_id, chanelName: $chanelName)';
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-
+  
     return other is AgoraTokenQuery &&
-        other.token == token &&
-        other.user_role_id == user_role_id &&
-        other.chanelName == chanelName;
+      other.token == token &&
+      other.user_role_id == user_role_id &&
+      other.chanelName == chanelName;
   }
-
   @override
-  int get hashCode =>
-      token.hashCode ^ user_role_id.hashCode ^ chanelName.hashCode;
+  int get hashCode => token.hashCode ^ user_role_id.hashCode ^ chanelName.hashCode;
 }
