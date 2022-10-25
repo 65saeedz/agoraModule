@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:agora15min/models/agora_token_query.dart';
 import 'package:agora15min/models/agora_token_response.dart';
-import 'package:agora15min/utils/http_client.dart';
-import 'package:agora15min/utils/settings.dart';
+import 'package:agora15min/clients/http_client.dart';
+import 'package:agora15min/clients/settings.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:permission_handler/permission_handler.dart';
 

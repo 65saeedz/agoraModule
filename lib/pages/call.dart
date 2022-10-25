@@ -2,7 +2,7 @@ import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as rtc_local_value;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as rtc_remote_value;
 import 'package:flutter/material.dart';
-import '../utils/settings.dart';
+import '../clients/settings.dart';
 
 class CallPage extends StatefulWidget {
   final String? channelName;
