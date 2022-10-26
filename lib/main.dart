@@ -1,4 +1,4 @@
-import 'package:agora15min/pages/index.dart';
+import 'package:agora15min/pages/test_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: const IndexPage(),
+      home: const TestPage(),
     );
   }
 }
