@@ -52,7 +52,6 @@ class _TestPageState extends State<TestPage> {
                     hintText: 'Enter user Id '),
               ),
               TextField(
-                keyboardType: TextInputType.number,
                 controller: _uidTokenController,
                 decoration: InputDecoration(
                     errorText: _validatorError
