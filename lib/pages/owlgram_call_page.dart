@@ -1,4 +1,6 @@
 import 'package:agora_rtc_engine/rtc_engine.dart';
+import 'package:agora_rtc_engine/rtc_local_view.dart' as rtc_local_value;
+import 'package:agora_rtc_engine/rtc_remote_view.dart' as rtc_remote_value;
 import 'package:flutter/material.dart';
 
 class OwlgramCallPage extends StatefulWidget {
@@ -13,13 +15,12 @@ class OwlgramCallPage extends StatefulWidget {
 }
 
 class _OwlgramCallPageState extends State<OwlgramCallPage> {
-   final _users = <int>[];
+  final _users = <int>[];
   final _infostring = <String>[];
   String? _channel;
   bool muted = false;
   bool viewPanel = false;
 
- 
   @override
   void initState() {
     super.initState();
@@ -33,7 +34,8 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
     widget.agoraEngine.destroy();
     super.dispose();
   }
- Future<void> _initialize() async {
+
+  Future<void> _initialize() async {
     widget.agoraEngine.setEventHandler(RtcEngineEventHandler(
       error: (code) {
         setState(() {
@@ -77,8 +79,6 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
     ));
   }
 
- 
- 
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
@@ -86,10 +86,17 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
         backgroundColor: Colors.black,
         body: Stack(
           children: [
-            Container(
-              decoration: BoxDecoration(color: Colors.amber),
-              child: null,
-            ),
+            _channel == null
+                ? Container(
+                    decoration: BoxDecoration(color: Colors.amber),
+                    child: rtc_local_value.SurfaceView())
+                : Container(
+                    decoration: BoxDecoration(color: Colors.amber),
+                    child: rtc_remote_value.SurfaceView(
+                      uid: _users[0],
+                      channelId: _channel!,
+                    ),
+                  ),
             Container(
               padding: EdgeInsets.symmetric(vertical: 52, horizontal: 16),
               width: width, height: height,
@@ -107,7 +114,7 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
                         'assets/images/Messanger_back.png',
                         width: 35,
                       ),
-                      true
+                      _channel == null
                           ? Container(
                               width: 84,
                               height: 114,
@@ -115,10 +122,14 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
                                 color: Colors.red,
                                 borderRadius: BorderRadius.circular(14),
                               ),
-                            )
+                              child: rtc_local_value.SurfaceView())
                           : Container(
                               width: 84,
                               height: 114,
+                              child: rtc_remote_value.SurfaceView(
+                                channelId: _channel!,
+                                uid: _users[0],
+                              ),
                             ),
                     ],
                   ),

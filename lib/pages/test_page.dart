@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:agora15min/clients/agora_client.dart';
+import 'package:agora15min/pages/owlgram_call_page.dart';
 import 'call_page.dart';
 import 'package:flutter/material.dart';
 
@@ -122,7 +123,7 @@ class _TestPageState extends State<TestPage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => CallPage(
+            builder: (context) => OwlgramCallPage(
               agoraEngine: agoraClient.engine,
             ),
           ),
