@@ -86,14 +86,14 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
         backgroundColor: Colors.black,
         body: Stack(
           children: [
-            _channel == null
+            _users.isEmpty
                 ? Container(
                     decoration: BoxDecoration(color: Colors.amber),
                     child: rtc_local_value.SurfaceView())
                 : Container(
                     decoration: BoxDecoration(color: Colors.amber),
                     child: rtc_remote_value.SurfaceView(
-                      uid: _users[0],
+                      uid: _users.first,
                       channelId: _channel!,
                     ),
                   ),
@@ -114,23 +114,19 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
                         'assets/images/Messanger_back.png',
                         width: 35,
                       ),
-                      _channel == null
+                      _users.isEmpty
                           ? Container(
+                              width: 84,
+                              height: 114,
+                            )
+                          : Container(
                               width: 84,
                               height: 114,
                               decoration: BoxDecoration(
                                 color: Colors.red,
                                 borderRadius: BorderRadius.circular(14),
                               ),
-                              child: rtc_local_value.SurfaceView())
-                          : Container(
-                              width: 84,
-                              height: 114,
-                              child: rtc_remote_value.SurfaceView(
-                                channelId: _channel!,
-                                uid: _users[0],
-                              ),
-                            ),
+                              child: rtc_local_value.SurfaceView()),
                     ],
                   ),
                   Spacer(),

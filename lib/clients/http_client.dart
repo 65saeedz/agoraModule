@@ -1,6 +1,8 @@
 import 'package:agora15min/models/agora_token_query.dart';
 import 'package:agora15min/models/agora_token_response.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class HttpClient {
   final _baseUrl = 'http://65.21.119.84:2021';
@@ -11,6 +13,13 @@ class HttpClient {
     _dio = Dio(
       BaseOptions(baseUrl: _baseUrl),
     );
+    if (kDebugMode) {
+      _dio.interceptors.add(
+        PrettyDioLogger(
+          maxWidth: 180,
+        ),
+      );
+    }
   }
 
   Future<AgoraTokenResponse> fetchAgoraToken(AgoraTokenQuery query) async {
