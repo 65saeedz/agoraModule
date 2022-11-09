@@ -1,6 +1,8 @@
 import 'package:agora15min/pages/test_page.dart';
 import 'package:flutter/material.dart';
 
+import 'pages/owlgram_call_page.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -16,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: const TestPage(),
+      home: TestPage(),
     );
   }
 }
