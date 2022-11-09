@@ -140,7 +140,7 @@ class _TestPageState extends State<TestPage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => CallPage(
+            builder: (context) => OwlgramCallPage(
               agoraEngine: agoraClient.engine,
             ),
           ),

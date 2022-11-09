@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as rtc_local_value;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as rtc_remote_value;
@@ -19,6 +21,7 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
   final _infostring = <String>[];
   String? _channel;
   bool muted = false;
+  bool videoOff = false;
   bool viewPanel = false;
 
   @override
@@ -83,15 +86,23 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
     return Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: Color(0xff26263F),
         body: Stack(
           children: [
             _users.isEmpty
                 ? Container(
-                    decoration: BoxDecoration(color: Colors.amber),
+                    decoration: BoxDecoration(
+                      color: Color(0xff26263F),
+                      gradient: LinearGradient(
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                          colors: [Color(0xff26263F), Colors.transparent]),
+                    ),
                     child: rtc_local_value.SurfaceView())
                 : Container(
-                    decoration: BoxDecoration(color: Colors.amber),
+                    decoration: BoxDecoration(
+                      color: Color(0xff26263F),
+                    ),
                     child: rtc_remote_value.SurfaceView(
                       uid: _users.first,
                       channelId: _channel!,
@@ -100,7 +111,12 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
             Container(
               padding: EdgeInsets.symmetric(vertical: 52, horizontal: 16),
               width: width, height: height,
-              decoration: BoxDecoration(color: Colors.green.withOpacity(0.1)),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.center,
+                    colors: [Color(0xff26263F), Colors.transparent]),
+              ),
               // alignment: Alignment.center,
               child: Column(
                 // mainAxisSize: MainAxisSize.min,
@@ -110,23 +126,31 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Image.asset(
-                        'assets/images/Messanger_back.png',
-                        width: 35,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Image.asset(
+                          'assets/images/Messanger_back.png',
+                          width: 35,
+                        ),
                       ),
                       _users.isEmpty
                           ? Container(
                               width: 84,
                               height: 114,
                             )
-                          : Container(
-                              width: 84,
-                              height: 114,
-                              decoration: BoxDecoration(
-                                color: Colors.red,
-                                borderRadius: BorderRadius.circular(14),
-                              ),
-                              child: rtc_local_value.SurfaceView()),
+                          : ClipRRect(
+                              borderRadius: BorderRadius.circular(16),
+                              child: Container(
+                                  width: 84,
+                                  height: 114,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xff26263F),
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: rtc_local_value.SurfaceView()),
+                            ),
                     ],
                   ),
                   Spacer(),
@@ -134,84 +158,102 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Opacity(
-                            opacity: 0.7,
-                            child: RichText(
-                              text: TextSpan(
-                                text: ' Video Call with \n',
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w400),
-                                children: const <TextSpan>[
-                                  TextSpan(
-                                    text: 'Jennifer Aniston ',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 19),
+                      if (_users.isNotEmpty)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Opacity(
+                              opacity: 0.7,
+                              child: RichText(
+                                text: TextSpan(
+                                  text: ' Video Call with \n',
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w400),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: _users.first.toString(),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 19),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 16,
+                            ),
+                            Container(
+                              width: 88,
+                              height: 32,
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(41, 45, 50, 0.38),
+                                borderRadius: BorderRadius.circular(17),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    height: 7,
+                                    width: 7,
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.green),
                                   ),
+                                  SizedBox(
+                                    width: 12,
+                                  ),
+                                  Text(
+                                    '02:30',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.white),
+                                  )
                                 ],
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 16,
-                          ),
-                          Container(
-                            width: 88,
-                            height: 32,
-                            decoration: BoxDecoration(
-                              color: Color.fromRGBO(41, 45, 50, 0.38),
-                              borderRadius: BorderRadius.circular(17),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  height: 7,
-                                  width: 7,
-                                  decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.green),
-                                ),
-                                SizedBox(
-                                  width: 12,
-                                ),
-                                Text(
-                                  '02:30',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.white),
-                                )
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          )
-                        ],
-                      ),
+                            SizedBox(
+                              height: 10,
+                            )
+                          ],
+                        ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           // Spacer(),
-                          myFABs(
-                              icon: Icons.info_outline,
-                              func: () {
-                                //          setState(() {
-                                //   viewPanel = !viewPanel;
-                                // });
-                              }),
+                          // myFABs(
+                          //     icon: Icons.info_outline,
+                          //     func: () {
+                          //       //          setState(() {
+                          //       //   viewPanel = !viewPanel;
+                          //       // });
+                          //     }),
                           myFABs(icon: Icons.add, func: () {}),
-                          myFABs(icon: Icons.message, func: () {}),
-                          myFABs(icon: Icons.mic, func: () {}),
+                          //myFABs(icon: Icons.message, func: () {}),
                           myFABs(
-                              icon: Icons.videocam_off_outlined, func: () {}),
+                              icon: muted ? Icons.mic_off_outlined : Icons.mic,
+                              func: () {
+                                setState(() {
+                                  print('object');
+                                  muted = !muted;
+                                });
+                                widget.agoraEngine.muteLocalAudioStream(muted);
+                              }),
+                          myFABs(
+                              icon: videoOff
+                                  ? Icons.videocam_off_outlined
+                                  : Icons.video_camera_front_outlined,
+                              func: () {
+                                setState(() {
+                                  videoOff = !videoOff;
+                                });
+                                widget.agoraEngine
+                                    .muteLocalVideoStream(videoOff);
+                              }),
                         ],
                       )
                     ],
@@ -220,7 +262,9 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
                     backgroundColor: Color(0xffFF4647),
                     extendedPadding:
                         EdgeInsets.symmetric(vertical: 8, horizontal: 52),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
                     label: Icon(
                       Icons.call_end,
                       color: Colors.white,
@@ -234,7 +278,7 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
         ));
   }
 
-  Opacity myFABs({required IconData icon, required Function func}) {
+  Opacity myFABs({required IconData icon, required func}) {
     return Opacity(
       opacity: 0.7,
       child: Container(
@@ -251,9 +295,7 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
             color: Colors.black,
             size: 32,
           ),
-          onPressed: () {
-            func;
-          },
+          onPressed: func,
         ),
       ),
     );

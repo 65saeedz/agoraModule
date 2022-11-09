@@ -13,13 +13,13 @@ class HttpClient {
     _dio = Dio(
       BaseOptions(baseUrl: _baseUrl),
     );
-    if (kDebugMode) {
-      _dio.interceptors.add(
-        PrettyDioLogger(
-          maxWidth: 180,
-        ),
-      );
-    }
+    // if (kDebugMode) {
+    //   _dio.interceptors.add(
+    //     PrettyDioLogger(
+    //       maxWidth: 180,
+    //     ),
+    //   );
+    // }
   }
 
   Future<AgoraTokenResponse> fetchAgoraToken(AgoraTokenQuery query) async {
