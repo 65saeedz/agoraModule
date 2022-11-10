@@ -64,7 +64,7 @@ class AgoraClient {
     await engine.setChannelProfile(ChannelProfile.LiveBroadcasting);
     await engine.setClientRole(ClientRole.Broadcaster);
     VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
-    configuration.dimensions = const VideoDimensions(width: 1920, height: 1080);
+    configuration.dimensions = const VideoDimensions();
     await engine.setVideoEncoderConfiguration(configuration);
   }
 
