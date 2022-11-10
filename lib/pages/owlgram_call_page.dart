@@ -1,8 +1,7 @@
-import 'dart:ffi';
-
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as rtc_local_value;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as rtc_remote_value;
+import 'package:custom_timer/custom_timer.dart';
 import 'package:flutter/material.dart';
 
 class OwlgramCallPage extends StatefulWidget {
@@ -22,6 +21,8 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
   String? _channel;
   bool muted = false;
   bool videoOff = false;
+  final CustomTimerController _controller = CustomTimerController();
+
   bool viewPanel = false;
 
   @override
@@ -64,6 +65,7 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
           final info = 'user joined:$uid';
           _infostring.add(info);
           _users.add(uid);
+          _controller.start();
         });
       },
       userOffline: (uid, elapsed) {
@@ -158,69 +160,91 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      if (_users.isNotEmpty)
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Opacity(
-                              opacity: 0.7,
-                              child: RichText(
-                                text: TextSpan(
-                                  text: ' Video Call with \n',
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w400),
-                                  children: <TextSpan>[
-                                    TextSpan(
-                                      text: _users.first.toString(),
+                      _users.isNotEmpty
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Opacity(
+                                  opacity: 0.7,
+                                  child: RichText(
+                                    text: TextSpan(
+                                      text: ' Video Call with \n',
                                       style: TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 19),
+                                          fontSize: 14,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w400),
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                          text: 'User ID:' +
+                                              _users.first.toString(),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 19),
+                                        ),
+                                      ],
                                     ),
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 16,
-                            ),
-                            Container(
+                                SizedBox(
+                                  height: 16,
+                                ),
+                                Container(
+                                  width: 88,
+                                  height: 32,
+                                  decoration: BoxDecoration(
+                                    color: Color.fromRGBO(41, 45, 50, 0.38),
+                                    borderRadius: BorderRadius.circular(17),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        height: 7,
+                                        width: 7,
+                                        decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.green),
+                                      ),
+                                      SizedBox(
+                                        width: 12,
+                                      ),
+                                      CustomTimer(
+                                          controller: _controller,
+                                          begin: Duration(seconds: 0),
+                                          end: Duration(hours: 11),
+                                          builder: (remaining) {
+                                            print(remaining.hours);
+                                            return remaining.hours != '00'
+                                                ? Text(
+                                                    "${remaining.hours}:${remaining.minutes}:${remaining.seconds}",
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color: Colors.white),
+                                                  )
+                                                : Text(
+                                                    "${remaining.minutes}:${remaining.seconds}",
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color: Colors.white),
+                                                  );
+                                          }),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                )
+                              ],
+                            )
+                          : Container(
                               width: 88,
                               height: 32,
-                              decoration: BoxDecoration(
-                                color: Color.fromRGBO(41, 45, 50, 0.38),
-                                borderRadius: BorderRadius.circular(17),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    height: 7,
-                                    width: 7,
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.green),
-                                  ),
-                                  SizedBox(
-                                    width: 12,
-                                  ),
-                                  Text(
-                                    '02:30',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.white),
-                                  )
-                                ],
-                              ),
                             ),
-                            SizedBox(
-                              height: 10,
-                            )
-                          ],
-                        ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
