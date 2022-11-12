@@ -19,7 +19,6 @@ dependencies:
   cupertino_icons: ^1.0.2
   dio: ^4.0.6
   pretty_dio_logger: ^1.2.0-beta-1
-  circular_countdown_timer: ^0.2.3
 
 dev_dependencies:
   flutter_test:
@@ -29,5 +28,5 @@ dev_dependencies:
 
 flutter:
   assets:
-    - assets/images/Messanger_back.png
+    - assets/images/
   uses-material-design: true

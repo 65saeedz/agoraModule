@@ -3,6 +3,7 @@ import 'package:agora_rtc_engine/rtc_local_view.dart' as rtc_local_value;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as rtc_remote_value;
 import 'package:custom_timer/custom_timer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class OwlgramCallPage extends StatefulWidget {
   final RtcEngine agoraEngine;
@@ -27,15 +28,31 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
 
   @override
   void initState() {
-    super.initState();
+    SystemChrome.setPreferredOrientations(
+      [
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ],
+    );
     _initialize();
+
+    super.initState();
   }
 
   @override
   void dispose() {
+    SystemChrome.setPreferredOrientations(
+      [
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+      ],
+    );
     _users.clear();
     widget.agoraEngine.leaveChannel();
     widget.agoraEngine.destroy();
+
     super.dispose();
   }
 
@@ -111,7 +128,7 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
                     ),
                   ),
             Container(
-              padding: EdgeInsets.symmetric(vertical: 52, horizontal: 16),
+              padding: EdgeInsets.fromLTRB(16, 64, 16, 48),
               width: width, height: height,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -134,7 +151,7 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
                         },
                         child: Image.asset(
                           'assets/images/Messanger_back.png',
-                          width: 35,
+                          width: 36,
                         ),
                       ),
                       _users.isEmpty
@@ -256,10 +273,14 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
                           //       //   viewPanel = !viewPanel;
                           //       // });
                           //     }),
-                          myFABs(icon: Icons.add, func: () {}),
-                          //myFABs(icon: Icons.message, func: () {}),
                           myFABs(
-                              icon: muted ? Icons.mic_off_outlined : Icons.mic,
+                              func: () {},
+                              iconAddress: 'assets/images/add.png'),
+                          myFABs(
+                              func: () {},
+                              iconAddress: 'assets/images/messages.png'),
+                          myFABs(
+                              iconAddress: 'assets/images/microphone-off.png',
                               func: () {
                                 setState(() {
                                   print('object');
@@ -268,9 +289,7 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
                                 widget.agoraEngine.muteLocalAudioStream(muted);
                               }),
                           myFABs(
-                              icon: videoOff
-                                  ? Icons.videocam_off_outlined
-                                  : Icons.video_camera_front_outlined,
+                              iconAddress: 'assets/images/video-off.png',
                               func: () {
                                 setState(() {
                                   videoOff = !videoOff;
@@ -285,14 +304,14 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
                   FloatingActionButton.extended(
                     backgroundColor: Color(0xffFF4647),
                     extendedPadding:
-                        EdgeInsets.symmetric(vertical: 8, horizontal: 52),
+                        EdgeInsets.symmetric(vertical: 12, horizontal: 52),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    label: Icon(
-                      Icons.call_end,
+                    label: Image.asset(
+                      'assets/images/Call.png',
                       color: Colors.white,
-                      size: 28,
+                      width: 36,
                     ),
                   ),
                 ],
@@ -302,7 +321,7 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
         ));
   }
 
-  Opacity myFABs({required IconData icon, required func}) {
+  Opacity myFABs({required String iconAddress, required func}) {
     return Opacity(
       opacity: 0.7,
       child: Container(
@@ -314,10 +333,10 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
           fillColor: Colors.white,
           shape: CircleBorder(),
           //  elevation: 0.0,
-          child: Icon(
-            icon,
+          child: Image.asset(
+            iconAddress,
             color: Colors.black,
-            size: 32,
+            width: 24,
           ),
           onPressed: func,
         ),

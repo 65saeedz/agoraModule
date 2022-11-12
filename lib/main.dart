@@ -1,9 +1,14 @@
 import 'package:agora15min/pages/test_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-import 'pages/owlgram_call_page.dart';
+import 'pages/video_call_page.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+    [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown],
+  );
   runApp(const MyApp());
 }
 
