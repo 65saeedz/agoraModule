@@ -4,6 +4,7 @@ import 'package:agora_rtc_engine/rtc_remote_view.dart' as rtc_remote_value;
 import 'package:custom_timer/custom_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class OwlgramCallPage extends StatefulWidget {
   final RtcEngine agoraEngine;
@@ -275,12 +276,12 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
                           //     }),
                           myFABs(
                               func: () {},
-                              iconAddress: 'assets/images/add.png'),
+                              iconAddress: 'assets/images/add.svg'),
                           myFABs(
                               func: () {},
-                              iconAddress: 'assets/images/messages.png'),
+                              iconAddress: 'assets/images/messages.svg'),
                           myFABs(
-                              iconAddress: 'assets/images/microphone-off.png',
+                              iconAddress: 'assets/images/microphone-off.svg',
                               func: () {
                                 setState(() {
                                   print('object');
@@ -289,7 +290,7 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
                                 widget.agoraEngine.muteLocalAudioStream(muted);
                               }),
                           myFABs(
-                              iconAddress: 'assets/images/video-off.png',
+                              iconAddress: 'assets/images/video-off.svg',
                               func: () {
                                 setState(() {
                                   videoOff = !videoOff;
@@ -308,11 +309,7 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    label: Image.asset(
-                      'assets/images/Call.png',
-                      color: Colors.white,
-                      width: 36,
-                    ),
+                    label: SvgPicture.asset('assets/images/Call.svg'),
                   ),
                 ],
               ),
@@ -333,7 +330,7 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
           fillColor: Colors.white,
           shape: CircleBorder(),
           //  elevation: 0.0,
-          child: Image.asset(
+          child: SvgPicture.asset(
             iconAddress,
             color: Colors.black,
             width: 24,
