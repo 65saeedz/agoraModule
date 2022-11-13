@@ -1,5 +1,6 @@
 import 'package:agora15min/clients/http_client.dart';
 import 'package:agora15min/models/agora_token_query.dart';
+import 'package:agora15min/models/enums/call_type.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -9,11 +10,12 @@ class AgoraClient {
   final httpClient = HttpClient();
 
   Future<void> makeCall({
+    required CallType callType,
     required String userId,
     required String userToken,
     required String peerId,
   }) async {
-    await _initialize();
+    await _initialize(callType: callType);
 
     final agoraTokenResponse = await httpClient.fetchAgoraToken(
       AgoraTokenQuery(
@@ -22,7 +24,7 @@ class AgoraClient {
       ),
     );
 
-    await _handlePermissions();
+    await _handlePermissions(callType: callType);
 
     await engine.joinChannel(
       agoraTokenResponse.token,
@@ -33,12 +35,13 @@ class AgoraClient {
   }
 
   Future<void> receiveCall({
+    required CallType callType,
     required String userId,
     required String userToken,
     required String peerId,
     required String channelName,
   }) async {
-    await _initialize();
+    await _initialize(callType: callType);
 
     final agoraTokenResponse = await httpClient.fetchAgoraToken(
       AgoraTokenQuery(
@@ -48,7 +51,7 @@ class AgoraClient {
       ),
     );
 
-    await _handlePermissions();
+    await _handlePermissions(callType: callType);
 
     await engine.joinChannel(
       agoraTokenResponse.token,
@@ -58,18 +61,28 @@ class AgoraClient {
     );
   }
 
-  Future<void> _initialize() async {
+  Future<void> _initialize({
+    required CallType callType,
+  }) async {
     engine = await RtcEngine.create(_appId);
-    await engine.enableVideo();
+    if (callType == CallType.videoCall) {
+      await engine.enableVideo();
+    }
     await engine.setChannelProfile(ChannelProfile.LiveBroadcasting);
     await engine.setClientRole(ClientRole.Broadcaster);
-    VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
-    configuration.dimensions = const VideoDimensions();
-    await engine.setVideoEncoderConfiguration(configuration);
+    if (callType == CallType.videoCall) {
+      VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
+      configuration.dimensions = const VideoDimensions();
+      await engine.setVideoEncoderConfiguration(configuration);
+    }
   }
 
-  Future<void> _handlePermissions() async {
-    await Permission.camera.request();
+  Future<void> _handlePermissions({
+    required CallType callType,
+  }) async {
+    if (callType == CallType.videoCall) {
+      await Permission.camera.request();
+    }
     await Permission.microphone.request();
   }
 }

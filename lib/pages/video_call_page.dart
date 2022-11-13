@@ -11,18 +11,22 @@ import '../widgets/custom_FAB.dart';
 import '../widgets/stack_profile_pic.dart';
 import '../widgets/timerbox.dart';
 
-class OwlgramCallPage extends StatefulWidget {
+class VideoCallPage extends StatefulWidget {
   final RtcEngine agoraEngine;
-  const OwlgramCallPage({
+  final String peerName;
+  final String networkImageAddress;
+  const VideoCallPage({
+    Key? key,
     required this.agoraEngine,
-    super.key,
-  });
+    required this.peerName,
+    required this.networkImageAddress,
+  }) : super(key: key);
 
   @override
-  State<OwlgramCallPage> createState() => _OwlgramCallPageState();
+  State<VideoCallPage> createState() => _VideoCallPageState();
 }
 
-class _OwlgramCallPageState extends State<OwlgramCallPage> {
+class _VideoCallPageState extends State<VideoCallPage> {
   final _users = <int>[];
   final _infostring = <String>[];
   String? _channel;
@@ -199,8 +203,7 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
                                           fontWeight: FontWeight.w400),
                                       children: <TextSpan>[
                                         TextSpan(
-                                          text: 'User ID:' +
-                                              _users.first.toString(),
+                                          text: widget.peerName,
                                           style: TextStyle(
                                               fontWeight: FontWeight.w700,
                                               fontSize: 19),
@@ -264,16 +267,16 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
                                 widget.agoraEngine
                                     .muteLocalVideoStream(videoOff);
                               }),
-                          CallerButton(
-                            color: Color(0xffFF4647),
-                            func: () {
-                              Navigator.of(context).pop();
-                            },
-                            svgIconAddress: 'assets/images/Call.svg',
-                          ),
                         ],
                       )
                     ],
+                  ),
+                  CallerButton(
+                    color: Color(0xffFF4647),
+                    func: () {
+                      Navigator.of(context).pop();
+                    },
+                    svgIconAddress: 'assets/images/Call.svg',
                   ),
                 ],
               ),

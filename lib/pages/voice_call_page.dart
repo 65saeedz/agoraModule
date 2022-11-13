@@ -12,10 +12,14 @@ import '../widgets/custom_FAB.dart';
 import '../widgets/timerbox.dart';
 
 class VoiceCallPage extends StatefulWidget {
-  // final RtcEngine agoraEngine;
+  final RtcEngine agoraEngine;
+  final String peerName;
+  final String networkImageAddress;
   const VoiceCallPage({
-    super.key,
-    // required this.agoraEngine,
+    Key? key,
+    required this.agoraEngine,
+    required this.peerName,
+    required this.networkImageAddress,
   });
 
   @override
@@ -55,55 +59,55 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
       ],
     );
     _users.clear();
-    // widget.agoraEngine.leaveChannel();
-    // widget.agoraEngine.destroy();
+    widget.agoraEngine.leaveChannel();
+    widget.agoraEngine.destroy();
 
     super.dispose();
   }
 
   Future<void> _initialize() async {
-    // widget.agoraEngine.setEventHandler(RtcEngineEventHandler(
-    //   error: (code) {
-    //     setState(() {
-    //       final info = 'error :$code';
-    //       _infostring.add(info);
-    //     });
-    //   },
-    //   joinChannelSuccess: (channel, uid, elapsed) {
-    //     setState(() {
-    //       final info = 'joined channel:$channel ,uid :$uid';
-    //       _channel = channel;
-    //       _infostring.add(info);
-    //     });
-    //   },
-    //   leaveChannel: (stats) {
-    //     setState(() {
-    //       _infostring.add('leave channel');
-    //       _users.clear();
-    //     });
-    //   },
-    //   userJoined: (uid, elapsed) {
-    //     setState(() {
-    //       final info = 'user joined:$uid';
-    //       _infostring.add(info);
-    //       _users.add(uid);
-    //       _controller.start();
-    //     });
-    //   },
-    //   userOffline: (uid, elapsed) {
-    //     setState(() {
-    //       final info = 'user offline:$uid';
-    //       _infostring.add(info);
-    //       _users.remove(uid);
-    //     });
-    //   },
-    //   firstRemoteVideoFrame: (uid, width, height, elapsed) {
-    //     setState(() {
-    //       final info = 'first remote video :$uid $width *$height';
-    //       _infostring.add(info);
-    //     });
-    //   },
-    // ));
+    widget.agoraEngine.setEventHandler(RtcEngineEventHandler(
+      error: (code) {
+        setState(() {
+          final info = 'error :$code';
+          _infostring.add(info);
+        });
+      },
+      joinChannelSuccess: (channel, uid, elapsed) {
+        setState(() {
+          final info = 'joined channel:$channel ,uid :$uid';
+          _channel = channel;
+          _infostring.add(info);
+        });
+      },
+      leaveChannel: (stats) {
+        setState(() {
+          _infostring.add('leave channel');
+          _users.clear();
+        });
+      },
+      userJoined: (uid, elapsed) {
+        setState(() {
+          final info = 'user joined:$uid';
+          _infostring.add(info);
+          _users.add(uid);
+          _controller.start();
+        });
+      },
+      userOffline: (uid, elapsed) {
+        setState(() {
+          final info = 'user offline:$uid';
+          _infostring.add(info);
+          _users.remove(uid);
+        });
+      },
+      firstRemoteVideoFrame: (uid, width, height, elapsed) {
+        setState(() {
+          final info = 'first remote video :$uid $width *$height';
+          _infostring.add(info);
+        });
+      },
+    ));
   }
 
   @override
@@ -138,13 +142,12 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
             ),
             StackProfilePic(
                 color: Color(0xff26263F),
-                peerImageUrl:
-                    'https://images.fastcompany.net/image/upload/w_596,c_limit,q_auto:best,f_auto/fc/3024831-inline-s-4-the-personal-philosophies-that-shape-todays-successful-innovators.jpg'),
+                peerImageUrl: widget.networkImageAddress),
             SizedBox(
               height: 46,
             ),
             Text(
-              'Mostafa Sammak',
+              widget.peerName,
               style: TextStyle(
                 fontWeight: FontWeight.w700,
                 fontSize: 20,
@@ -187,7 +190,7 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
                           print('object');
                           muted = !muted;
                         });
-                        // widget.agoraEngine.muteLocalAudioStream(muted);
+                        widget.agoraEngine.muteLocalAudioStream(muted);
                       }),
                   CallerButton(
                     color: Color(0xffFF4647),
@@ -202,7 +205,7 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
                         setState(() {
                           videoOff = !videoOff;
                         });
-                        //  widget.agoraEngine .muteLocalVideoStream(videoOff);
+                        widget.agoraEngine.muteLocalVideoStream(videoOff);
                       }),
                 ],
               ),
