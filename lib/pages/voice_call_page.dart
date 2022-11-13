@@ -151,38 +151,57 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
               height: 32,
             ),
             TimerBox(
+              borderCirular: 22,
+              circleSize: 10,
+              height: 44,
+              width: 102,
               controller: _controller,
               color: Color(0xff353551),
             ),
             Spacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                CustomFAB(
-                    iconAddress: 'assets/images/microphone-off.svg',
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  CustomFAB(iconAddress: 'assets/images/add.svg', func: () {}),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CustomFAB(
+                      iconAddress: 'assets/images/microphone-off.svg',
+                      func: () {
+                        setState(() {
+                          print('object');
+                          muted = !muted;
+                        });
+                        // widget.agoraEngine.muteLocalAudioStream(muted);
+                      }),
+                  CallerButton(
+                    color: Color(0xffFF4647),
                     func: () {
-                      setState(() {
-                        print('object');
-                        muted = !muted;
-                      });
-                      // widget.agoraEngine.muteLocalAudioStream(muted);
-                    }),
-                CallerButton(
-                  color: Color(0xffFF4647),
-                  func: () {
-                    Navigator.of(context).pop();
-                  },
-                  svgIconAddress: 'assets/images/Call.svg',
-                ),
-                CustomFAB(
-                    iconAddress: 'assets/images/video-off.svg',
-                    func: () {
-                      setState(() {
-                        videoOff = !videoOff;
-                      });
-                      //  widget.agoraEngine .muteLocalVideoStream(videoOff);
-                    }),
-              ],
+                      Navigator.of(context).pop();
+                    },
+                    svgIconAddress: 'assets/images/Call.svg',
+                  ),
+                  CustomFAB(
+                      iconAddress: 'assets/images/volume-high.svg',
+                      func: () {
+                        setState(() {
+                          videoOff = !videoOff;
+                        });
+                        //  widget.agoraEngine .muteLocalVideoStream(videoOff);
+                      }),
+                ],
+              ),
             ),
           ],
         ),

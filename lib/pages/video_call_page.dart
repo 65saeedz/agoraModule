@@ -210,6 +210,10 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
                                   height: 16,
                                 ),
                                 TimerBox(
+                                  borderCirular: 16.5,
+                                  width: 88,
+                                  height: 32,
+                                  circleSize: 7,
                                   controller: _controller,
                                   color: Color.fromRGBO(41, 45, 50, 0.38),
                                 ),
@@ -233,9 +237,9 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
                           //       //   viewPanel = !viewPanel;
                           //       // });
                           //     }),
-                          // CustomFAB(
-                          //     iconAddress: 'assets/images/add.svg',
-                          //     func: () {}),
+                          CustomFAB(
+                              iconAddress: 'assets/images/add.svg',
+                              func: () {}),
                           CustomFAB(
                               iconAddress: 'assets/images/messages.svg',
                               func: () {}),

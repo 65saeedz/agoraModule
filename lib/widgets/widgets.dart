@@ -4,31 +4,41 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class TimerBox extends StatelessWidget {
+  final double circleSize;
+  final double height;
+  final double borderCirular;
+  final double width;
   final Color? color;
+  final CustomTimerController controller;
   const TimerBox({
     required this.color,
+    required this.height,
+    required this.width,
+    required this.borderCirular,
+    required this.circleSize,
+    required this.controller,
     Key? key,
-    required CustomTimerController controller,
-  })  : _controller = controller,
-        super(key: key);
-
-  final CustomTimerController _controller;
+    required,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 88,
-      height: 32,
+      width: width,
+      height: height,
       decoration: BoxDecoration(
         color: color,
-        borderRadius: BorderRadius.circular(17),
+        borderRadius: BorderRadius.circular(borderCirular),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          SizedBox(
+            width: 10,
+          ),
           Container(
-            height: 7,
-            width: 7,
+            height: circleSize,
+            width: circleSize,
             decoration:
                 BoxDecoration(shape: BoxShape.circle, color: Colors.green),
           ),
@@ -36,7 +46,7 @@ class TimerBox extends StatelessWidget {
             width: 12,
           ),
           CustomTimer(
-              controller: _controller,
+              controller: controller,
               begin: Duration(seconds: 0),
               end: Duration(hours: 11),
               builder: (remaining) {
