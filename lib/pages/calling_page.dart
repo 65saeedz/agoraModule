@@ -6,6 +6,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:flutter/material.dart';
 
+import '../widgets/widgets.dart';
+
 class CallingPage extends StatelessWidget {
   final String peerImageUrl;
   final String peerName;
@@ -60,7 +62,7 @@ class CallingPage extends StatelessWidget {
           // mainAxisAlignment: MainAxisAlignment.center,
           // crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _buildStackProfilePic(context),
+            StackProfilePic(peerImageUrl: peerImageUrl, color: Colors.black87),
             SizedBox(
               height: 16,
             ),
@@ -105,63 +107,6 @@ class CallingPage extends StatelessWidget {
               ],
             )
           ]),
-    );
-  }
-
-  Stack _buildStackProfilePic(BuildContext context) {
-    return Stack(
-      //  fit: StackFit.expand,
-      //   alignment: AlignmentDirectional.center,
-      children: [
-        Container(
-          padding: EdgeInsets.all(10),
-          alignment: Alignment.center,
-          width: 180,
-          height: 180,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border:
-                Border.all(color: Color.fromRGBO(14, 185, 123, .15), width: 1),
-          ),
-          child: Container(
-            padding: EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              //  color: Colors.black87,
-              shape: BoxShape.circle,
-              border: Border.all(
-                  color: Color.fromRGBO(14, 185, 123, .22), width: 1),
-            ),
-            child: Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                    color: Color.fromRGBO(14, 185, 123, .54), width: 2),
-              ),
-              child: Container(
-                padding: EdgeInsets.all(11),
-                decoration: BoxDecoration(
-                    color: Colors.black87,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                          offset: Offset(0, 2),
-                          blurRadius: 4,
-                          spreadRadius: 0,
-                          color: Color(0xff11BE7F))
-                    ]
-                    // border: Border.all(
-                    //     color: Color.fromRGBO(14, 185, 123, 1), width: 1),
-                    ),
-                child: ClipOval(
-                  child: CachedNetworkImage(
-                    imageUrl: peerImageUrl,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        )
-      ],
     );
   }
 }

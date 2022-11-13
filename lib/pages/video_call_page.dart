@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../widgets/widgets.dart';
+
 class OwlgramCallPage extends StatefulWidget {
   final RtcEngine agoraEngine;
   const OwlgramCallPage({
@@ -24,7 +26,6 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
   bool muted = false;
   bool videoOff = false;
   final CustomTimerController _controller = CustomTimerController();
-
   bool viewPanel = false;
 
   @override
@@ -150,9 +151,10 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
                         onTap: () {
                           Navigator.of(context).pop();
                         },
-                        child: Image.asset(
-                          'assets/images/Messanger_back.png',
+                        child: SvgPicture.asset(
+                          'assets/images/Messanger_back.svg',
                           width: 36,
+                          // color: Color(0xffD9DCE3),
                         ),
                       ),
                       _users.isEmpty
@@ -207,52 +209,9 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
                                 SizedBox(
                                   height: 16,
                                 ),
-                                Container(
-                                  width: 88,
-                                  height: 32,
-                                  decoration: BoxDecoration(
-                                    color: Color.fromRGBO(41, 45, 50, 0.38),
-                                    borderRadius: BorderRadius.circular(17),
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        height: 7,
-                                        width: 7,
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: Colors.green),
-                                      ),
-                                      SizedBox(
-                                        width: 12,
-                                      ),
-                                      CustomTimer(
-                                          controller: _controller,
-                                          begin: Duration(seconds: 0),
-                                          end: Duration(hours: 11),
-                                          builder: (remaining) {
-                                            print(remaining.hours);
-                                            return remaining.hours != '00'
-                                                ? Text(
-                                                    "${remaining.hours}:${remaining.minutes}:${remaining.seconds}",
-                                                    style: TextStyle(
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color: Colors.white),
-                                                  )
-                                                : Text(
-                                                    "${remaining.minutes}:${remaining.seconds}",
-                                                    style: TextStyle(
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color: Colors.white),
-                                                  );
-                                          }),
-                                    ],
-                                  ),
+                                TimerBox(
+                                  controller: _controller,
+                                  color: Color.fromRGBO(41, 45, 50, 0.38),
                                 ),
                                 SizedBox(
                                   height: 10,
@@ -274,13 +233,13 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
                           //       //   viewPanel = !viewPanel;
                           //       // });
                           //     }),
-                          myFABs(
-                              func: () {},
-                              iconAddress: 'assets/images/add.svg'),
-                          myFABs(
-                              func: () {},
-                              iconAddress: 'assets/images/messages.svg'),
-                          myFABs(
+                          // CustomFAB(
+                          //     iconAddress: 'assets/images/add.svg',
+                          //     func: () {}),
+                          CustomFAB(
+                              iconAddress: 'assets/images/messages.svg',
+                              func: () {}),
+                          CustomFAB(
                               iconAddress: 'assets/images/microphone-off.svg',
                               func: () {
                                 setState(() {
@@ -289,7 +248,7 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
                                 });
                                 widget.agoraEngine.muteLocalAudioStream(muted);
                               }),
-                          myFABs(
+                          CustomFAB(
                               iconAddress: 'assets/images/video-off.svg',
                               func: () {
                                 setState(() {
@@ -298,46 +257,21 @@ class _OwlgramCallPageState extends State<OwlgramCallPage> {
                                 widget.agoraEngine
                                     .muteLocalVideoStream(videoOff);
                               }),
+                          CallerButton(
+                            color: Color(0xffFF4647),
+                            func: () {
+                              Navigator.of(context).pop();
+                            },
+                            svgIconAddress: 'assets/images/Call.svg',
+                          ),
                         ],
                       )
                     ],
-                  ),
-                  FloatingActionButton.extended(
-                    backgroundColor: Color(0xffFF4647),
-                    extendedPadding:
-                        EdgeInsets.symmetric(vertical: 12, horizontal: 52),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    label: SvgPicture.asset('assets/images/Call.svg'),
                   ),
                 ],
               ),
             )
           ],
         ));
-  }
-
-  Opacity myFABs({required String iconAddress, required func}) {
-    return Opacity(
-      opacity: 0.7,
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 10),
-        // decoration: BoxDecoration(color: Colors.white),
-        width: 50,
-        height: 50,
-        child: RawMaterialButton(
-          fillColor: Colors.white,
-          shape: CircleBorder(),
-          //  elevation: 0.0,
-          child: SvgPicture.asset(
-            iconAddress,
-            color: Colors.black,
-            width: 24,
-          ),
-          onPressed: func,
-        ),
-      ),
-    );
   }
 }
