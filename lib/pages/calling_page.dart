@@ -6,7 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:flutter/material.dart';
 
-import '../widgets/widgets.dart';
+import '../widgets/stack_profile_pic.dart';
 
 class CallingPage extends StatelessWidget {
   final String peerImageUrl;

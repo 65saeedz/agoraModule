@@ -1,4 +1,4 @@
-import 'package:agora15min/widgets/widgets.dart';
+import 'package:agora15min/widgets/stack_profile_pic.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:custom_timer/custom_timer.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +6,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as rtc_local_value;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as rtc_remote_value;
 import 'package:flutter/services.dart';
+
+import '../widgets/caller_button.dart';
+import '../widgets/custom_FAB.dart';
+import '../widgets/timerbox.dart';
 
 class VoiceCallPage extends StatefulWidget {
   // final RtcEngine agoraEngine;
