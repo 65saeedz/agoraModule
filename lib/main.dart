@@ -1,11 +1,6 @@
-import 'package:agora15min/models/enums/call_type.dart';
-import 'package:agora15min/pages/calling_page.dart';
 import 'package:agora15min/pages/test_page.dart';
-import 'package:agora15min/pages/voice_call_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import 'pages/video_call_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +21,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.green,
         ),
-        home: TestPage()
+        home:const TestPage()
 
         // CallingPage(
         //   peerImageUrl:

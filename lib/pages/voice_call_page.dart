@@ -3,12 +3,10 @@ import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:custom_timer/custom_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:agora_rtc_engine/rtc_local_view.dart' as rtc_local_value;
-import 'package:agora_rtc_engine/rtc_remote_view.dart' as rtc_remote_value;
 import 'package:flutter/services.dart';
 
 import '../widgets/caller_button.dart';
-import '../widgets/custom_FAB.dart';
+import '../widgets/custom_fab.dart';
 import '../widgets/timerbox.dart';
 
 class VoiceCallPage extends StatefulWidget {
@@ -16,7 +14,7 @@ class VoiceCallPage extends StatefulWidget {
   final String peerName;
   final String networkImageAddress;
   const VoiceCallPage({
-    Key? key,
+    super.key,
     required this.agoraEngine,
     required this.peerName,
     required this.networkImageAddress,
@@ -29,11 +27,12 @@ class VoiceCallPage extends StatefulWidget {
 class _VoiceCallPageState extends State<VoiceCallPage> {
   final _users = <int>[];
   final _infostring = <String>[];
-  String? _channel;
+  // String? _channel;
   bool muted = false;
   bool videoOff = false;
   final CustomTimerController _controller = CustomTimerController();
   bool viewPanel = false;
+  bool onSpeaker = false;
 
   @override
   void initState() {
@@ -76,7 +75,7 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
       joinChannelSuccess: (channel, uid, elapsed) {
         setState(() {
           final info = 'joined channel:$channel ,uid :$uid';
-          _channel = channel;
+          //  _channel = channel;
           _infostring.add(info);
         });
       },
@@ -115,8 +114,8 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
     return Scaffold(
       //   backgroundColor: Color(0xff26263F),
       body: Container(
-        padding: EdgeInsets.fromLTRB(16, 64, 16, 48),
-        color: Color(0xff26263F),
+        padding: const EdgeInsets.fromLTRB(16, 64, 16, 48),
+        color: const Color(0xff26263F),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -141,31 +140,32 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
               ],
             ),
             StackProfilePic(
-                color: Color(0xff26263F),
+                color: const Color(0xff26263F),
                 peerImageUrl: widget.networkImageAddress),
-            SizedBox(
+            const SizedBox(
               height: 46,
             ),
             Text(
               widget.peerName,
-              style: TextStyle(
+              style: const TextStyle(
                 fontWeight: FontWeight.w700,
                 fontSize: 20,
                 color: Colors.white,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 32,
             ),
-            TimerBox(
-              borderCirular: 22,
-              circleSize: 10,
-              height: 44,
-              width: 102,
-              controller: _controller,
-              color: Color(0xff353551),
-            ),
-            Spacer(),
+            if (_users.isNotEmpty)
+              TimerBox(
+                borderCirular: 22,
+                circleSize: 10,
+                height: 44,
+                width: 102,
+                controller: _controller,
+                color: const Color(0xff353551),
+              ),
+            const Spacer(),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
@@ -175,7 +175,7 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
                 ],
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 8,
             ),
             Padding(
@@ -187,13 +187,12 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
                       iconAddress: 'assets/images/microphone-off.svg',
                       func: () {
                         setState(() {
-                          print('object');
                           muted = !muted;
                         });
                         widget.agoraEngine.muteLocalAudioStream(muted);
                       }),
                   CallerButton(
-                    color: Color(0xffFF4647),
+                    color: const Color(0xffFF4647),
                     func: () {
                       Navigator.of(context).pop();
                     },
@@ -203,9 +202,10 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
                       iconAddress: 'assets/images/volume-high.svg',
                       func: () {
                         setState(() {
-                          videoOff = !videoOff;
+                          onSpeaker = !onSpeaker;
                         });
-                        widget.agoraEngine.muteLocalVideoStream(videoOff);
+                        widget.agoraEngine.setEnableSpeakerphone(onSpeaker);
+                        print(onSpeaker);
                       }),
                 ],
               ),

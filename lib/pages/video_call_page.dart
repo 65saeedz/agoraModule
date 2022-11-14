@@ -7,8 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../widgets/caller_button.dart';
-import '../widgets/custom_FAB.dart';
-import '../widgets/stack_profile_pic.dart';
+import '../widgets/custom_fab.dart';
 import '../widgets/timerbox.dart';
 
 class VideoCallPage extends StatefulWidget {
@@ -109,26 +108,26 @@ class _VideoCallPageState extends State<VideoCallPage> {
       },
     ));
   }
-
+@override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
     return Scaffold(
-        backgroundColor: Color(0xff26263F),
+        backgroundColor: const Color(0xff26263F),
         body: Stack(
           children: [
             _users.isEmpty
                 ? Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Color(0xff26263F),
                       gradient: LinearGradient(
                           begin: Alignment.bottomCenter,
                           end: Alignment.topCenter,
                           colors: [Color(0xff26263F), Colors.transparent]),
                     ),
-                    child: rtc_local_value.SurfaceView())
+                    child: const rtc_local_value.SurfaceView())
                 : Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Color(0xff26263F),
                     ),
                     child: rtc_remote_value.SurfaceView(
@@ -137,9 +136,9 @@ class _VideoCallPageState extends State<VideoCallPage> {
                     ),
                   ),
             Container(
-              padding: EdgeInsets.fromLTRB(16, 64, 16, 48),
+              padding: const EdgeInsets.fromLTRB(16, 64, 16, 48),
               width: width, height: height,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 gradient: LinearGradient(
                     begin: Alignment.bottomCenter,
                     end: Alignment.center,
@@ -165,7 +164,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
                         ),
                       ),
                       _users.isEmpty
-                          ? Container(
+                          ?const SizedBox(
                               width: 84,
                               height: 114,
                             )
@@ -175,14 +174,14 @@ class _VideoCallPageState extends State<VideoCallPage> {
                                   width: 84,
                                   height: 114,
                                   decoration: BoxDecoration(
-                                    color: Color(0xff26263F),
+                                    color:const Color(0xff26263F),
                                     borderRadius: BorderRadius.circular(16),
                                   ),
-                                  child: rtc_local_value.SurfaceView()),
+                                  child:const rtc_local_value.SurfaceView()),
                             ),
                     ],
                   ),
-                  Spacer(),
+               const   Spacer(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -197,14 +196,14 @@ class _VideoCallPageState extends State<VideoCallPage> {
                                   child: RichText(
                                     text: TextSpan(
                                       text: ' Video Call with \n',
-                                      style: TextStyle(
+                                      style:const TextStyle(
                                           fontSize: 14,
                                           color: Colors.white,
                                           fontWeight: FontWeight.w400),
                                       children: <TextSpan>[
                                         TextSpan(
                                           text: widget.peerName,
-                                          style: TextStyle(
+                                          style:const TextStyle(
                                               fontWeight: FontWeight.w700,
                                               fontSize: 19),
                                         ),
@@ -212,7 +211,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(
+                               const SizedBox(
                                   height: 16,
                                 ),
                                 TimerBox(
@@ -221,14 +220,14 @@ class _VideoCallPageState extends State<VideoCallPage> {
                                   height: 32,
                                   circleSize: 7,
                                   controller: _controller,
-                                  color: Color.fromRGBO(41, 45, 50, 0.38),
+                                  color:const Color.fromRGBO(41, 45, 50, 0.38),
                                 ),
-                                SizedBox(
+                               const SizedBox(
                                   height: 10,
                                 )
                               ],
                             )
-                          : Container(
+                          :const SizedBox(
                               width: 88,
                               height: 32,
                             ),
@@ -253,7 +252,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
                               iconAddress: 'assets/images/microphone-off.svg',
                               func: () {
                                 setState(() {
-                                  print('object');
+                                 // print('object');
                                   muted = !muted;
                                 });
                                 widget.agoraEngine.muteLocalAudioStream(muted);
@@ -272,7 +271,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
                     ],
                   ),
                   CallerButton(
-                    color: Color(0xffFF4647),
+                    color:const Color(0xffFF4647),
                     func: () {
                       Navigator.of(context).pop();
                     },

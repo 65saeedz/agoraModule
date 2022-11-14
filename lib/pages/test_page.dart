@@ -4,7 +4,6 @@ import 'package:agora15min/models/enums/call_type.dart';
 import 'package:agora15min/pages/calling_page.dart';
 import 'package:agora15min/pages/video_call_page.dart';
 import 'package:agora15min/pages/voice_call_page.dart';
-import 'call_page.dart';
 import 'package:flutter/material.dart';
 
 enum UserRole { callMaker, callReciver }
@@ -24,7 +23,7 @@ class _TestPageState extends State<TestPage> {
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _userImageAddressController =
       TextEditingController();
-  bool _validatorError = false;
+  final bool _validatorError = false;
   UserRole? userRole = UserRole.callMaker;
   String userDefaultNetworkImageAddress =
       'https://images.fastcompany.net/image/upload/w_596,c_limit,q_auto:best,f_auto/fc/3024831-inline-s-4-the-personal-philosophies-that-shape-todays-successful-innovators.jpg';
@@ -94,16 +93,16 @@ class _TestPageState extends State<TestPage> {
                 ),
               TextField(
                 controller: _userNameController,
-                decoration: InputDecoration(
-                    border: const UnderlineInputBorder(
+                decoration: const InputDecoration(
+                    border: UnderlineInputBorder(
                       borderSide: BorderSide(width: 1),
                     ),
                     hintText: 'Enter User name'),
               ),
               TextField(
                 controller: _userImageAddressController,
-                decoration: InputDecoration(
-                    border: const UnderlineInputBorder(
+                decoration: const InputDecoration(
+                    border: UnderlineInputBorder(
                       borderSide: BorderSide(width: 1),
                     ),
                     hintText: 'Enter User network image address  (optional)'),
@@ -130,13 +129,13 @@ class _TestPageState extends State<TestPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton.icon(
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.video_camera_back_outlined,
                       ),
                       onPressed: onVideoCall,
                       label: const Text('Video Call')),
                   ElevatedButton.icon(
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.call,
                       ),
                       onPressed: onVoiceCall,
@@ -161,20 +160,22 @@ class _TestPageState extends State<TestPage> {
           userToken: _uidTokenController.text,
           peerId: _peerUidController.text,
         );
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => VoiceCallPage(
-              networkImageAddress: _userImageAddressController.text == ''
-                  ? userDefaultNetworkImageAddress
-                  : _userImageAddressController.text,
-              peerName: _userNameController.text == ''
-                  ? 'user test'
-                  : _userNameController.text,
-              agoraEngine: agoraClient.engine,
+        if (mounted) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => VoiceCallPage(
+                networkImageAddress: _userImageAddressController.text == ''
+                    ? userDefaultNetworkImageAddress
+                    : _userImageAddressController.text,
+                peerName: _userNameController.text == ''
+                    ? 'user test'
+                    : _userNameController.text,
+                agoraEngine: agoraClient.engine,
+              ),
             ),
-          ),
-        );
+          );
+        }
         break;
 
       case UserRole.callReciver:
@@ -197,21 +198,23 @@ class _TestPageState extends State<TestPage> {
                   peerId: _peerUidController.text,
                   channelName: _channelController.text,
                 );
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => VoiceCallPage(
-                      networkImageAddress:
-                          _userImageAddressController.text == ''
-                              ? userDefaultNetworkImageAddress
-                              : _userImageAddressController.text,
-                      peerName: _userNameController.text == ''
-                          ? 'receiver user'
-                          : _userNameController.text,
-                      agoraEngine: agoraClient.engine,
+                if (mounted) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => VoiceCallPage(
+                        networkImageAddress:
+                            _userImageAddressController.text == ''
+                                ? userDefaultNetworkImageAddress
+                                : _userImageAddressController.text,
+                        peerName: _userNameController.text == ''
+                            ? 'receiver user'
+                            : _userNameController.text,
+                        agoraEngine: agoraClient.engine,
+                      ),
                     ),
-                  ),
-                );
+                  );
+                }
               },
             ),
           ),
@@ -234,20 +237,22 @@ class _TestPageState extends State<TestPage> {
           userToken: _uidTokenController.text,
           peerId: _peerUidController.text,
         );
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => VideoCallPage(
-              networkImageAddress: _userImageAddressController.text == ''
-                  ? userDefaultNetworkImageAddress
-                  : _userImageAddressController.text,
-              peerName: _userNameController.text == ''
-                  ? 'caller user'
-                  : _userNameController.text,
-              agoraEngine: agoraClient.engine,
+        if (mounted) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => VideoCallPage(
+                networkImageAddress: _userImageAddressController.text == ''
+                    ? userDefaultNetworkImageAddress
+                    : _userImageAddressController.text,
+                peerName: _userNameController.text == ''
+                    ? 'caller user'
+                    : _userNameController.text,
+                agoraEngine: agoraClient.engine,
+              ),
             ),
-          ),
-        );
+          );
+        }
         break;
 
       case UserRole.callReciver:
@@ -270,21 +275,23 @@ class _TestPageState extends State<TestPage> {
                   peerId: _peerUidController.text,
                   channelName: _channelController.text,
                 );
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => VideoCallPage(
-                      networkImageAddress:
-                          _userImageAddressController.text == ''
-                              ? userDefaultNetworkImageAddress
-                              : _userImageAddressController.text,
-                      peerName: _userNameController.text == ''
-                          ? 'user test'
-                          : _userNameController.text,
-                      agoraEngine: agoraClient.engine,
+                if (mounted) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => VideoCallPage(
+                        networkImageAddress:
+                            _userImageAddressController.text == ''
+                                ? userDefaultNetworkImageAddress
+                                : _userImageAddressController.text,
+                        peerName: _userNameController.text == ''
+                            ? 'user test'
+                            : _userNameController.text,
+                        agoraEngine: agoraClient.engine,
+                      ),
                     ),
-                  ),
-                );
+                  );
+                }
               },
             ),
           ),

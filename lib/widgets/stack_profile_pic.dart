@@ -1,10 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:custom_timer/custom_timer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-
-
-
 
 class StackProfilePic extends StatelessWidget {
   const StackProfilePic({
@@ -23,35 +18,35 @@ class StackProfilePic extends StatelessWidget {
       //   alignment: AlignmentDirectional.center,
       children: [
         Container(
-          padding: EdgeInsets.all(10),
+          padding:const EdgeInsets.all(10),
           alignment: Alignment.center,
           width: 180,
           height: 180,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border:
-                Border.all(color: Color.fromRGBO(14, 185, 123, .15), width: 1),
+            border: Border.all(
+                color: const Color.fromRGBO(14, 185, 123, .15), width: 1),
           ),
           child: Container(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               //  color: Colors.black87,
               shape: BoxShape.circle,
               border: Border.all(
-                  color: Color.fromRGBO(14, 185, 123, .22), width: 1),
+                  color: const Color.fromRGBO(14, 185, 123, .22), width: 1),
             ),
             child: Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                    color: Color.fromRGBO(14, 185, 123, .54), width: 2),
+                    color:const Color.fromRGBO(14, 185, 123, .54), width: 2),
               ),
               child: Container(
-                padding: EdgeInsets.all(11),
+                padding:const EdgeInsets.all(11),
                 decoration: BoxDecoration(
                     color: color,
                     shape: BoxShape.circle,
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
                           offset: Offset(0, 2),
                           blurRadius: 4,

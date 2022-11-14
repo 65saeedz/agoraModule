@@ -1,7 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custom_timer/custom_timer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class TimerBox extends StatelessWidget {
   final double circleSize;
@@ -33,35 +31,35 @@ class TimerBox extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Container(
             height: circleSize,
             width: circleSize,
-            decoration:
-                BoxDecoration(shape: BoxShape.circle, color: Colors.green),
+            decoration: const BoxDecoration(
+                shape: BoxShape.circle, color: Colors.green),
           ),
-          SizedBox(
+          const SizedBox(
             width: 12,
           ),
           CustomTimer(
               controller: controller,
-              begin: Duration(seconds: 0),
-              end: Duration(hours: 11),
+              begin: const Duration(seconds: 0),
+              end: const Duration(hours: 11),
               builder: (remaining) {
-                print(remaining.hours);
+              //  print(remaining.hours);
                 return remaining.hours != '00'
                     ? Text(
                         "${remaining.hours}:${remaining.minutes}:${remaining.seconds}",
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
                             color: Colors.white),
                       )
                     : Text(
                         "${remaining.minutes}:${remaining.seconds}",
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
                             color: Colors.white),
