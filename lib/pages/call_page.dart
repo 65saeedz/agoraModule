@@ -227,3 +227,15 @@
 //         ));
 //   }
 // }
+  // final TextEditingController user1Id = TextEditingController();
+  // final TextEditingController user1Token = TextEditingController();
+  // final TextEditingController user1Name = TextEditingController();
+  // final TextEditingController user2Id = TextEditingController();
+  // final TextEditingController user2Name = TextEditingController();
+  // final TextEditingController _userImageAddressController =
+  //     TextEditingController();
+  // final TextEditingController channelName = TextEditingController();
+  // final bool _validatorError = false;
+  // UserRole? userRole = UserRole.callMaker;
+  // String userDefaultNetworkImageAddress =
+  //     'https://images.fastcompany.net/image/upload/w_596,c_limit,q_auto:best,f_auto/fc/3024831-inline-s-4-the-personal-philosophies-that-shape-todays-successful-innovators.jpg';
