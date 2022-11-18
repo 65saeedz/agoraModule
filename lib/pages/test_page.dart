@@ -4,6 +4,7 @@ import 'package:agora15min/models/enums/call_type.dart';
 import 'package:agora15min/pages/calling_page.dart';
 import 'package:agora15min/pages/video_call_page.dart';
 import 'package:agora15min/pages/voice_call_page.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -270,7 +271,49 @@ class _TestPageState extends State<TestPage> {
                   ],
                 ),
                 ElevatedButton(
-                    onPressed: () {}, child: const Text('show snack bar')),
+                  child: const Text('Show Awesome SnackBar'),
+                  onPressed: () {
+                    final snackBar = SnackBar(
+                      /// need to set following properties for best effect of awesome_snackbar_content
+                      elevation: 0,
+                      behavior: SnackBarBehavior.floating,
+                      backgroundColor: Colors.transparent,
+                      content: AwesomeSnackbarContent(
+                        title: 'On Snap!',
+                        message:
+                            'This is an example error message that will be shown in the body of snackbar!',
+
+                        /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+                        contentType: ContentType.failure,
+                      ),
+                    );
+
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(snackBar);
+                  },
+                ),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                  child: const Text('Show Awesome Material Banner'),
+                  onPressed: () {
+                    final materialBanner = MaterialBanner(
+                      /// need to set following properties for best effect of awesome_snackbar_content
+                      elevation: 0,
+                      backgroundColor: Colors.transparent,
+                      forceActionsBelow: true,
+                      content: Container(
+                        height: 80,
+                        color: Colors.blue,
+                      ),
+                      actions: const [SizedBox.shrink()],
+                    );
+
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentMaterialBanner()
+                      ..showMaterialBanner(materialBanner);
+                  },
+                ),
               ],
             ),
           ),
@@ -305,6 +348,7 @@ class _TestPageState extends State<TestPage> {
         break;
 
       case UserRole.callReciver:
+        //   ScaffoldMessenger.of(context)..hideCurrentMaterialBanner();
         showSnackBar(
             //   agoraClient: agoraClient,
             peerImageUrl: user1NetworkImageAddress,
