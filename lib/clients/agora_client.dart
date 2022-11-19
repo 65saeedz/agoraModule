@@ -1,7 +1,10 @@
 import 'package:agora15min/clients/http_client.dart';
 import 'package:agora15min/models/agora_token_query.dart';
 import 'package:agora15min/models/enums/call_type.dart';
+import 'package:agora15min/pages/video_call_page.dart';
+import 'package:agora15min/pages/voice_call_page.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart';
+import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class AgoraClient {
@@ -9,11 +12,14 @@ class AgoraClient {
   late RtcEngine engine;
   final httpClient = HttpClient();
 
-  Future<void> makeCall({
+  Future<void> makeCall(
+    BuildContext context, {
     required CallType callType,
     required String userId,
     required String userToken,
     required String peerId,
+    required String peerName,
+    required String peerImageUrl,
   }) async {
     await _initialize(callType: callType);
 
@@ -32,6 +38,33 @@ class AgoraClient {
       null,
       int.parse(userId),
     );
+
+    switch (callType) {
+      case CallType.voiceCall:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VoiceCallPage(
+              agoraEngine: engine,
+              peerName: peerName,
+              peerImageUrl: peerImageUrl,
+            ),
+          ),
+        );
+        break;
+
+      case CallType.videoCall:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VideoCallPage(
+              agoraEngine: engine,
+              peerName: peerName,
+            ),
+          ),
+        );
+        break;
+    }
   }
 
   Future<void> receiveCall({

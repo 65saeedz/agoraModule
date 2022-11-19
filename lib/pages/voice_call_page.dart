@@ -2,7 +2,6 @@ import 'package:agora15min/widgets/stack_profile_pic.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:custom_timer/custom_timer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/services.dart';
 
 import '../widgets/caller_button.dart';
@@ -12,12 +11,13 @@ import '../widgets/timerbox.dart';
 class VoiceCallPage extends StatefulWidget {
   final RtcEngine agoraEngine;
   final String peerName;
-  final String networkImageAddress;
+  final String peerImageUrl;
+
   const VoiceCallPage({
     super.key,
     required this.agoraEngine,
     required this.peerName,
-    required this.networkImageAddress,
+    required this.peerImageUrl,
   });
 
   @override
@@ -27,7 +27,6 @@ class VoiceCallPage extends StatefulWidget {
 class _VoiceCallPageState extends State<VoiceCallPage> {
   final _users = <int>[];
   final _infostring = <String>[];
-  // String? _channel;
   bool muted = false;
   bool videoOff = false;
   final CustomTimerController _controller = CustomTimerController();
@@ -124,15 +123,10 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: SvgPicture.asset(
-                    'assets/images/Messanger_back.svg',
-                    width: 36,
-                    // color: Color(0xffD9DCE3),
-                  ),
-                ),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Container()),
                 Container(
                   width: 84,
                   //  height: 114,
@@ -141,7 +135,7 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
             ),
             StackProfilePic(
                 color: const Color(0xff26263F),
-                peerImageUrl: widget.networkImageAddress),
+                peerImageUrl: widget.peerImageUrl),
             const SizedBox(
               height: 46,
             ),

@@ -4,7 +4,6 @@ import 'package:agora_rtc_engine/rtc_remote_view.dart' as rtc_remote_value;
 import 'package:custom_timer/custom_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import '../widgets/caller_button.dart';
 import '../widgets/custom_fab.dart';
@@ -13,12 +12,11 @@ import '../widgets/timerbox.dart';
 class VideoCallPage extends StatefulWidget {
   final RtcEngine agoraEngine;
   final String peerName;
-  final String networkImageAddress;
+
   const VideoCallPage({
     Key? key,
     required this.agoraEngine,
     required this.peerName,
-    required this.networkImageAddress,
   }) : super(key: key);
 
   @override
@@ -154,14 +152,10 @@ class _VideoCallPageState extends State<VideoCallPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: SvgPicture.asset(
-                          'assets/images/Messanger_back.svg',
-                          width: 36,
-                        ),
-                      ),
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Container()),
                       _users.isEmpty
                           ? const SizedBox(
                               width: 84,

@@ -1,24 +1,36 @@
 import 'dart:ui';
-import 'package:agora15min/models/enums/call_type.dart';
+
+import 'package:agora15min/pages/video_call_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter/material.dart';
+
+import 'package:agora15min/clients/agora_client.dart';
+import 'package:agora15min/models/enums/call_type.dart';
+import 'package:agora15min/pages/voice_call_page.dart';
+
 import '../widgets/stack_profile_pic.dart';
 
 class CallingPage extends StatefulWidget {
-  final String peerImageUrl;
-  final String peerName;
   final CallType callType;
-  final void Function() onAccepted;
+  final String userId;
+  final String userToken;
+  final String peerId;
+  final String peerName;
+  final String peerImageUrl;
+  final String channelName;
 
   const CallingPage({
-    super.key,
-    required this.peerImageUrl,
-    required this.peerName,
+    Key? key,
     required this.callType,
-    required this.onAccepted,
-  });
+    required this.userId,
+    required this.userToken,
+    required this.peerId,
+    required this.peerName,
+    required this.peerImageUrl,
+    required this.channelName,
+  }) : super(key: key);
 
   @override
   State<CallingPage> createState() => _CallingPageState();
@@ -37,9 +49,24 @@ class _CallingPageState extends State<CallingPage> {
   }
 
   @override
+  void dispose() {
+    SystemChrome.setPreferredOrientations(
+      [
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+      ],
+    );
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
@@ -63,65 +90,101 @@ class _CallingPageState extends State<CallingPage> {
               ),
             ),
           ),
-          topElement(context),
+          _buildTopElement(context),
         ],
       ),
     );
   }
 
-  Container topElement(BuildContext context) {
+  Widget _buildTopElement(BuildContext context) {
     return Container(
       padding: const EdgeInsets.fromLTRB(24, 80, 24, 46),
       child: Column(
-          // mainAxisAlignment: MainAxisAlignment.center,
-          // crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            StackProfilePic(
-                peerImageUrl: widget.peerImageUrl, color: Colors.black87),
-            const SizedBox(
-              height: 16,
-            ),
-            Text(
-              widget.peerName,
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 30),
-            ),
-            const SizedBox(
-              height: 12,
-            ),
-            Text(
-              widget.callType == CallType.voiceCall
-                  ? 'Voice Calling ...'
-                  : 'Video Calling ...',
-              style: const TextStyle(
-                  color: Color(0xff86858A),
-                  fontWeight: FontWeight.w400,
-                  fontSize: 23),
-            ),
-            const Spacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                FloatingActionButton.extended(
-                    backgroundColor: const Color(0xffFF4647),
-                    extendedPadding: const EdgeInsets.symmetric(
-                        vertical: 12, horizontal: 52),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    label: SvgPicture.asset('assets/images/Call.svg')),
-                FloatingActionButton.extended(
-                  backgroundColor: const Color(0xff11BE7F),
+        children: [
+          StackProfilePic(
+              peerImageUrl: widget.peerImageUrl, color: Colors.black87),
+          const SizedBox(
+            height: 16,
+          ),
+          Text(
+            widget.peerName,
+            style: const TextStyle(
+                color: Colors.white, fontWeight: FontWeight.w700, fontSize: 30),
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          Text(
+            widget.callType == CallType.voiceCall
+                ? 'Voice Calling ...'
+                : 'Video Calling ...',
+            style: const TextStyle(
+                color: Color(0xff86858A),
+                fontWeight: FontWeight.w400,
+                fontSize: 23),
+          ),
+          const Spacer(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              FloatingActionButton.extended(
+                  backgroundColor: const Color(0xffFF4647),
                   extendedPadding:
                       const EdgeInsets.symmetric(vertical: 12, horizontal: 52),
-                  onPressed: widget.onAccepted,
-                  label: SvgPicture.asset('assets/images/accept_call.svg'),
-                ),
-              ],
-            )
-          ]),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  label: SvgPicture.asset('assets/images/Call.svg')),
+              FloatingActionButton.extended(
+                backgroundColor: const Color(0xff11BE7F),
+                extendedPadding:
+                    const EdgeInsets.symmetric(vertical: 12, horizontal: 52),
+                onPressed: _onAccepted,
+                label: SvgPicture.asset('assets/images/accept_call.svg'),
+              ),
+            ],
+          )
+        ],
+      ),
     );
+  }
+
+  Future<void> _onAccepted() async {
+    final agoraClient = AgoraClient();
+
+    await agoraClient.receiveCall(
+      callType: widget.callType,
+      userId: widget.userId,
+      userToken: widget.userToken,
+      peerId: widget.peerId,
+      channelName: widget.channelName,
+    );
+    if (mounted) {
+      switch (widget.callType) {
+        case CallType.voiceCall:
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => VoiceCallPage(
+                agoraEngine: agoraClient.engine,
+                peerName: widget.peerName,
+                peerImageUrl: widget.peerImageUrl,
+              ),
+            ),
+          );
+          break;
+        case CallType.videoCall:
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => VideoCallPage(
+                agoraEngine: agoraClient.engine,
+                peerName: widget.peerName,
+              ),
+            ),
+          );
+          break;
+      }
+    }
   }
 }
