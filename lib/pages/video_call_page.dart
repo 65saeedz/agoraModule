@@ -108,7 +108,8 @@ class _VideoCallPageState extends State<VideoCallPage> {
       },
     ));
   }
-@override
+
+  @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
@@ -137,16 +138,15 @@ class _VideoCallPageState extends State<VideoCallPage> {
                   ),
             Container(
               padding: const EdgeInsets.fromLTRB(16, 64, 16, 48),
-              width: width, height: height,
+              width: width,
+              height: height,
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
                     begin: Alignment.bottomCenter,
                     end: Alignment.center,
                     colors: [Color(0xff26263F), Colors.transparent]),
               ),
-              // alignment: Alignment.center,
               child: Column(
-                // mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Row(
@@ -160,11 +160,10 @@ class _VideoCallPageState extends State<VideoCallPage> {
                         child: SvgPicture.asset(
                           'assets/images/Messanger_back.svg',
                           width: 36,
-                          // color: Color(0xffD9DCE3),
                         ),
                       ),
                       _users.isEmpty
-                          ?const SizedBox(
+                          ? const SizedBox(
                               width: 84,
                               height: 114,
                             )
@@ -174,14 +173,14 @@ class _VideoCallPageState extends State<VideoCallPage> {
                                   width: 84,
                                   height: 114,
                                   decoration: BoxDecoration(
-                                    color:const Color(0xff26263F),
+                                    color: const Color(0xff26263F),
                                     borderRadius: BorderRadius.circular(16),
                                   ),
-                                  child:const rtc_local_value.SurfaceView()),
+                                  child: const rtc_local_value.SurfaceView()),
                             ),
                     ],
                   ),
-               const   Spacer(),
+                  const Spacer(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -194,16 +193,17 @@ class _VideoCallPageState extends State<VideoCallPage> {
                                 Opacity(
                                   opacity: 0.7,
                                   child: RichText(
+                                    textAlign: TextAlign.left,
                                     text: TextSpan(
-                                      text: ' Video Call with \n',
-                                      style:const TextStyle(
+                                      text: 'Video Call with \n',
+                                      style: const TextStyle(
                                           fontSize: 14,
                                           color: Colors.white,
                                           fontWeight: FontWeight.w400),
                                       children: <TextSpan>[
                                         TextSpan(
                                           text: widget.peerName,
-                                          style:const TextStyle(
+                                          style: const TextStyle(
                                               fontWeight: FontWeight.w700,
                                               fontSize: 19),
                                         ),
@@ -211,7 +211,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
                                     ),
                                   ),
                                 ),
-                               const SizedBox(
+                                const SizedBox(
                                   height: 16,
                                 ),
                                 TimerBox(
@@ -220,28 +220,20 @@ class _VideoCallPageState extends State<VideoCallPage> {
                                   height: 32,
                                   circleSize: 7,
                                   controller: _controller,
-                                  color:const Color.fromRGBO(41, 45, 50, 0.38),
+                                  color: const Color.fromRGBO(41, 45, 50, 0.38),
                                 ),
-                               const SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 )
                               ],
                             )
-                          :const SizedBox(
+                          : const SizedBox(
                               width: 88,
                               height: 32,
                             ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          // Spacer(),
-                          // myFABs(
-                          //     icon: Icons.info_outline,
-                          //     func: () {
-                          //       //          setState(() {
-                          //       //   viewPanel = !viewPanel;
-                          //       // });
-                          //     }),
                           CustomFAB(
                               iconAddress: 'assets/images/add.svg',
                               func: () {}),
@@ -252,7 +244,6 @@ class _VideoCallPageState extends State<VideoCallPage> {
                               iconAddress: 'assets/images/microphone-off.svg',
                               func: () {
                                 setState(() {
-                                 // print('object');
                                   muted = !muted;
                                 });
                                 widget.agoraEngine.muteLocalAudioStream(muted);
@@ -271,7 +262,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
                     ],
                   ),
                   CallerButton(
-                    color:const Color(0xffFF4647),
+                    color: const Color(0xffFF4647),
                     func: () {
                       Navigator.of(context).pop();
                     },

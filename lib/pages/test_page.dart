@@ -4,7 +4,6 @@ import 'package:agora15min/models/enums/call_type.dart';
 import 'package:agora15min/pages/calling_page.dart';
 import 'package:agora15min/pages/video_call_page.dart';
 import 'package:agora15min/pages/voice_call_page.dart';
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -33,21 +32,25 @@ class _TestPageState extends State<TestPage> {
   final String user2NetworkImageAddress =
       'https://s.cafebazaar.ir/images/upload/screenshot/Amir.ID_Border1.jpg';
   UserRole? userRole = UserRole.callMaker;
+  late AnimationController animationController;
 
-  showSnackBar(
-      {required void Function() onTap,
-      // required AgoraClient agoraClient,
-      required void Function() onAccepted,
-      required void Function() onReject,
-      required String peerImageUrl,
-      required String peerName,
-      required CallType callType}) {
+  showSnackBar({
+    required void Function() onTap,
+    required void Function() onAccepted,
+    required CallType callType,
+  }) {
     return showTopSnackBar(
-      //dismissType: DismissType.values,
+      Overlay.of(context)!,
       padding: EdgeInsets.fromLTRB(16, 60, 16, 15),
       onTap: onTap,
-      Overlay.of(context)!,
+      dismissType: DismissType.onSwipe,
+      dismissDirection: const [
+        DismissDirection.up,
+      ],
       displayDuration: Duration(seconds: 60),
+      onAnimationControllerInit: (controller) {
+        animationController = controller;
+      },
       Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -57,13 +60,12 @@ class _TestPageState extends State<TestPage> {
         ),
         height: 90,
         child: Row(
-          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 10, 8, 10),
               child: ClipOval(
                 child: CachedNetworkImage(
-                  imageUrl: peerImageUrl,
+                  imageUrl: user1NetworkImageAddress,
                 ),
               ),
             ),
@@ -79,7 +81,7 @@ class _TestPageState extends State<TestPage> {
                 ),
                 DefaultTextStyle(
                   child: Text(
-                    peerName,
+                    user1Name,
                   ),
                   style: TextStyle(
                       fontSize: 20,
@@ -104,7 +106,9 @@ class _TestPageState extends State<TestPage> {
             ),
             Spacer(),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                animationController.reverse();
+              },
               child: Padding(
                 padding: const EdgeInsets.all(5),
                 child: SvgPicture.asset(
@@ -116,15 +120,17 @@ class _TestPageState extends State<TestPage> {
               style: ElevatedButton.styleFrom(
                 shape: CircleBorder(),
                 padding: EdgeInsets.all(14),
-                backgroundColor: Color(0xffFF4647), // <-- Button color
-                //  foregroundColor: Colors.blue, //<-- Splash color
+                backgroundColor: Color(0xffFF4647),
               ),
             ),
             SizedBox(
               width: 10,
             ),
             ElevatedButton(
-              onPressed: onAccepted,
+              onPressed: () {
+                animationController.reverse();
+                onAccepted();
+              },
               child: SvgPicture.asset(
                 'assets/images/accept_call.svg',
                 width: 28,
@@ -132,8 +138,7 @@ class _TestPageState extends State<TestPage> {
               style: ElevatedButton.styleFrom(
                 shape: CircleBorder(),
                 padding: EdgeInsets.all(10),
-                // backgroundColor: Colors.blue, // <-- Button color
-                foregroundColor: const Color(0xff11BE7F), // <-- Splash color
+                foregroundColor: const Color(0xff11BE7F),
               ),
             ),
           ],
@@ -161,7 +166,6 @@ class _TestPageState extends State<TestPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.amber.withOpacity(0.95),
       appBar: AppBar(
         title: const Text('Agora'),
         centerTitle: true,
@@ -270,50 +274,6 @@ class _TestPageState extends State<TestPage> {
                         label: const Text('Voice Call')),
                   ],
                 ),
-                ElevatedButton(
-                  child: const Text('Show Awesome SnackBar'),
-                  onPressed: () {
-                    final snackBar = SnackBar(
-                      /// need to set following properties for best effect of awesome_snackbar_content
-                      elevation: 0,
-                      behavior: SnackBarBehavior.floating,
-                      backgroundColor: Colors.transparent,
-                      content: AwesomeSnackbarContent(
-                        title: 'On Snap!',
-                        message:
-                            'This is an example error message that will be shown in the body of snackbar!',
-
-                        /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
-                        contentType: ContentType.failure,
-                      ),
-                    );
-
-                    ScaffoldMessenger.of(context)
-                      ..hideCurrentSnackBar()
-                      ..showSnackBar(snackBar);
-                  },
-                ),
-                const SizedBox(height: 10),
-                ElevatedButton(
-                  child: const Text('Show Awesome Material Banner'),
-                  onPressed: () {
-                    final materialBanner = MaterialBanner(
-                      /// need to set following properties for best effect of awesome_snackbar_content
-                      elevation: 0,
-                      backgroundColor: Colors.transparent,
-                      forceActionsBelow: true,
-                      content: Container(
-                        height: 80,
-                        color: Colors.blue,
-                      ),
-                      actions: const [SizedBox.shrink()],
-                    );
-
-                    ScaffoldMessenger.of(context)
-                      ..hideCurrentMaterialBanner()
-                      ..showMaterialBanner(materialBanner);
-                  },
-                ),
               ],
             ),
           ),
@@ -348,68 +308,63 @@ class _TestPageState extends State<TestPage> {
         break;
 
       case UserRole.callReciver:
-        //   ScaffoldMessenger.of(context)..hideCurrentMaterialBanner();
         showSnackBar(
-            //   agoraClient: agoraClient,
-            peerImageUrl: user1NetworkImageAddress,
-            peerName: user1Name,
-            callType: CallType.voiceCall,
-            onTap: () {
-              //  Navigator.of(context).pop();
+          callType: CallType.voiceCall,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CallingPage(
+                  peerImageUrl: user1NetworkImageAddress,
+                  peerName: user1Name,
+                  callType: CallType.voiceCall,
+                  onAccepted: () async {
+                    await agoraClient.receiveCall(
+                      callType: CallType.voiceCall,
+                      userId: user2Id,
+                      userToken: user2Token,
+                      peerId: user1Id,
+                      channelName: 'chat_$user1Id',
+                    );
+                    if (mounted) {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => VoiceCallPage(
+                            networkImageAddress: user1NetworkImageAddress,
+                            peerName: user1Name,
+                            agoraEngine: agoraClient.engine,
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ),
+            );
+          },
+          onAccepted: () async {
+            await agoraClient.receiveCall(
+              callType: CallType.voiceCall,
+              userId: user2Id,
+              userToken: user2Token,
+              peerId: user1Id,
+              channelName: 'chat_$user1Id',
+            );
+            if (mounted) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => CallingPage(
-                    peerImageUrl: user1NetworkImageAddress,
+                  builder: (context) => VoiceCallPage(
+                    networkImageAddress: user1NetworkImageAddress,
                     peerName: user1Name,
-                    callType: CallType.voiceCall,
-                    onAccepted: () async {
-                      await agoraClient.receiveCall(
-                        callType: CallType.voiceCall,
-                        userId: user2Id,
-                        userToken: user2Token,
-                        peerId: user1Id,
-                        channelName: 'chat_$user1Id',
-                      );
-                      if (mounted) {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => VoiceCallPage(
-                              networkImageAddress: user1NetworkImageAddress,
-                              peerName: user1Name,
-                              agoraEngine: agoraClient.engine,
-                            ),
-                          ),
-                        );
-                      }
-                    },
+                    agoraEngine: agoraClient.engine,
                   ),
                 ),
               );
-            },
-            onAccepted: () async {
-              await agoraClient.receiveCall(
-                callType: CallType.voiceCall,
-                userId: user2Id,
-                userToken: user2Token,
-                peerId: user1Id,
-                channelName: 'chat_$user1Id',
-              );
-              if (mounted) {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => VoiceCallPage(
-                      networkImageAddress: user1NetworkImageAddress,
-                      peerName: user1Name,
-                      agoraEngine: agoraClient.engine,
-                    ),
-                  ),
-                );
-              }
-            },
-            onReject: () {});
+            }
+          },
+        );
 
         break;
 
@@ -444,37 +399,63 @@ class _TestPageState extends State<TestPage> {
         break;
 
       case UserRole.callReciver:
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => CallingPage(
-              peerImageUrl: user1NetworkImageAddress,
-              peerName: user1Name,
-              callType: CallType.videoCall,
-              onAccepted: () async {
-                await agoraClient.receiveCall(
-                  callType: CallType.videoCall,
-                  userId: user2Id,
-                  userToken: user2Token,
-                  peerId: user1Id,
-                  channelName: 'chat_$user1Id',
-                );
-                if (mounted) {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => VideoCallPage(
-                        networkImageAddress: user1NetworkImageAddress,
-                        peerName: user1Name,
-                        agoraEngine: agoraClient.engine,
-                      ),
+        showSnackBar(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CallingPage(
+                    peerImageUrl: user1NetworkImageAddress,
+                    peerName: user1Name,
+                    callType: CallType.videoCall,
+                    onAccepted: () async {
+                      await agoraClient.receiveCall(
+                        callType: CallType.videoCall,
+                        userId: user2Id,
+                        userToken: user2Token,
+                        peerId: user1Id,
+                        channelName: 'chat_$user1Id',
+                      );
+                      if (mounted) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => VideoCallPage(
+                              networkImageAddress: user1NetworkImageAddress,
+                              peerName: user1Name,
+                              agoraEngine: agoraClient.engine,
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ),
+              );
+            },
+            onAccepted: () async {
+              await agoraClient.receiveCall(
+                callType: CallType.videoCall,
+                userId: user2Id,
+                userToken: user2Token,
+                peerId: user1Id,
+                channelName: 'chat_$user1Id',
+              );
+              if (mounted) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => VideoCallPage(
+                      networkImageAddress: user1NetworkImageAddress,
+                      peerName: user1Name,
+                      agoraEngine: agoraClient.engine,
                     ),
-                  );
-                }
-              },
-            ),
-          ),
-        );
+                  ),
+                );
+              }
+            },
+            callType: CallType.videoCall);
+
         break;
 
       default:
