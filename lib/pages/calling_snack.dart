@@ -37,7 +37,7 @@ class CallingSnack {
       Overlay.of(context)!,
       _buildChild(),
       padding: EdgeInsets.fromLTRB(16, 64, 16, 16),
-      displayDuration: Duration(seconds: 60),
+      displayDuration: Duration(seconds: 30),
       onAnimationControllerInit: (controller) {
         _animationController = controller;
       },
