@@ -96,7 +96,8 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
         setState(() {
           final info = 'user offline:$uid';
           _infostring.add(info);
-          _users.remove(uid);
+          // _users.remove(uid);
+          _users.clear();
         });
       },
       firstRemoteVideoFrame: (uid, width, height, elapsed) {

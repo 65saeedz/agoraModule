@@ -95,7 +95,8 @@ class _VideoCallPageState extends State<VideoCallPage> {
         setState(() {
           final info = 'user offline:$uid';
           _infostring.add(info);
-          _users.remove(uid);
+          // _users.remove(uid);
+          _users.clear();
         });
       },
       firstRemoteVideoFrame: (uid, width, height, elapsed) {
@@ -179,52 +180,52 @@ class _VideoCallPageState extends State<VideoCallPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      _users.isNotEmpty
-                          ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Opacity(
-                                  opacity: 0.7,
-                                  child: RichText(
-                                    textAlign: TextAlign.left,
-                                    text: TextSpan(
-                                      text: 'Video Call with \n',
-                                      style: const TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w400),
-                                      children: <TextSpan>[
-                                        TextSpan(
-                                          text: widget.peerName,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: 19),
-                                        ),
-                                      ],
-                                    ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Opacity(
+                            opacity: 0.7,
+                            child: RichText(
+                              textAlign: TextAlign.left,
+                              text: TextSpan(
+                                text: 'Video Call with \n',
+                                style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w400),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: widget.peerName,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 19),
                                   ),
-                                ),
-                                const SizedBox(
-                                  height: 16,
-                                ),
-                                TimerBox(
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          _users.isNotEmpty
+                              ? TimerBox(
                                   borderCirular: 16.5,
                                   width: 88,
                                   height: 32,
                                   circleSize: 7,
                                   controller: _controller,
                                   color: const Color.fromRGBO(41, 45, 50, 0.38),
-                                ),
-                                const SizedBox(
-                                  height: 10,
                                 )
-                              ],
-                            )
-                          : const SizedBox(
-                              width: 88,
-                              height: 32,
-                            ),
+                              : const SizedBox(
+                                  width: 88,
+                                  height: 32,
+                                ),
+                          const SizedBox(
+                            height: 10,
+                          )
+                        ],
+                      ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [

@@ -54,6 +54,13 @@ class CallingSnack {
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+                offset: Offset(0, 4),
+                blurRadius: 16,
+                spreadRadius: 0,
+                color: Color.fromRGBO(197, 197, 197, 0.26))
+          ],
           borderRadius: BorderRadius.all(
             Radius.circular(14),
           ),
@@ -149,7 +156,7 @@ class CallingSnack {
 
   void _onTap() {
     _animationController.reverse();
-    
+
     Navigator.push(
       context,
       MaterialPageRoute(
