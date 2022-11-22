@@ -12,6 +12,8 @@ dependencies:
   permission_handler: ^9.2.0
   agora_rtc_engine: ^5.1.0
   custom_timer: ^0.1.2
+  audio_session: ^0.1.11
+  just_audio: ^0.9.30
 
   flutter:
     sdk: flutter
@@ -22,7 +24,6 @@ dependencies:
   flutter_svg: ^1.1.6
   cached_network_image: ^3.2.2
   top_snackbar_flutter: ^3.0.0
-  awesome_snackbar_content: ^0.1.0
 
 dev_dependencies:
   flutter_test:
@@ -32,5 +33,6 @@ dev_dependencies:
 
 flutter:
   assets:
+    - assets/audios/
     - assets/images/
   uses-material-design: true

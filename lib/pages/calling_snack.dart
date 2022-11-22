@@ -5,7 +5,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
+import 'dart:math';
 
+import 'package:audio_session/audio_session.dart';
+import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart' as ja;
 import 'package:agora15min/models/enums/call_type.dart';
 import 'package:agora15min/pages/calling_page.dart';
 
@@ -32,7 +36,25 @@ class CallingSnack {
     required this.channelName,
   });
 
-  void show() {
+    final _player = ja.AudioPlayer(
+    // Handle audio_session events ourselves for the purpose of this demo.
+    handleInterruptions: false,
+    androidApplyAudioAttributes: false,
+    handleAudioSessionActivation: false,
+  );
+
+  void show() {    AudioSession.instance.then((audioSession) async {
+      // This line configures the app's audio session, indicating to the OS the
+      // type of audio we intend to play. Using the "speech" recipe rather than
+      // "music" since we are playing a podcast.
+      await audioSession.configure(
+        const AudioSessionConfiguration(),
+      );
+      // Listen to audio interruptions and pause or duck as appropriate.
+    //  _handleInterruptions(audioSession);
+      // Use another plugin to load audio to play.
+      await _player.setAsset("assets/audios/Ringtone 26.mp3");
+    });
     showTopSnackBar(
       Overlay.of(context)!,
       _buildChild(),
