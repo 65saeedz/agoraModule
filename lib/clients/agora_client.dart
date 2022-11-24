@@ -5,12 +5,16 @@ import 'package:agora15min/pages/video_call_page.dart';
 import 'package:agora15min/pages/voice_call_page.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
+
+import '../controllers/audio/audio_controller.dart';
 
 class AgoraClient {
   final _appId = 'a5b85475a1e34748a324db9d58622d98';
   late RtcEngine engine;
   final httpClient = HttpClient();
+  AudioController audioController = Get.find();
 
   Future<void> makeCall(
     BuildContext context, {
@@ -38,7 +42,6 @@ class AgoraClient {
       null,
       int.parse(userId),
     );
-
     switch (callType) {
       case CallType.voiceCall:
         Navigator.push(

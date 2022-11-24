@@ -134,7 +134,7 @@ class _CallingPageState extends State<CallingPage> {
                       const EdgeInsets.symmetric(vertical: 12, horizontal: 52),
                   onPressed: () {
                     Navigator.of(context).pop();
-                    audioController.player.stop();
+                    audioController.stopTone();
                   },
                   label: SvgPicture.asset('assets/images/Call.svg')),
               FloatingActionButton.extended(
@@ -154,7 +154,7 @@ class _CallingPageState extends State<CallingPage> {
   Future<void> _onAccepted() async {
     final agoraClient = AgoraClient();
 
-    audioController.player.stop();
+    audioController.stopTone();
     await agoraClient.receiveCall(
       callType: widget.callType,
       userId: widget.userId,

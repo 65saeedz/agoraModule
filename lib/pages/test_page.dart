@@ -101,7 +101,7 @@ class _TestPageState extends State<TestPage> {
 
     switch (userRole) {
       case UserRole.callMaker:
-        audioController.playCallingTone();
+        //  audioController.playCallingTone();
         agoraClient.makeCall(
           context,
           callType: CallType.voiceCall,
@@ -136,7 +136,7 @@ class _TestPageState extends State<TestPage> {
 
     switch (userRole) {
       case UserRole.callMaker:
-        audioController.playCallingTone();
+        //  audioController.playCallingTone();
 
         agoraClient.makeCall(
           context,

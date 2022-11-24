@@ -117,7 +117,7 @@ class CallingSnack {
             GestureDetector(
               onTap: () {
                 _animationController.reverse();
-                audioController.player.stop();
+                audioController.stopTone();
               },
               child: Container(
                 padding: EdgeInsets.all(7),
@@ -189,7 +189,7 @@ class CallingSnack {
   }
 
   void _onAccepted() async {
-    audioController.player.stop();
+    audioController.stopTone();
 
     final agoraClient = AgoraClient();
     await agoraClient.receiveCall(

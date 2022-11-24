@@ -1,29 +1,42 @@
 import 'package:get/get.dart';
 import 'package:audio_session/audio_session.dart';
-import 'package:just_audio/just_audio.dart' as ja;
+import 'package:just_audio/just_audio.dart';
 
 class AudioController extends GetxController {
-  final player = ja.AudioPlayer(
+  final _player = AudioPlayer(
     handleInterruptions: false,
     androidApplyAudioAttributes: false,
     handleAudioSessionActivation: false,
   );
+
   playCallingTone() {
-    playTone("assets/audios/calling.mp3");
+    _player.setAndroidAudioAttributes(
+      AndroidAudioAttributes(
+        contentType: AndroidAudioContentType.speech,
+        usage: AndroidAudioUsage.voiceCommunicationSignalling,
+      ),
+    );
+    _playTone("assets/audios/calling.mp3");
   }
 
   playRingTone() {
-    playTone("assets/audios/ringing.mp3");
+    _playTone("assets/audios/ringing.mp3");
   }
 
-  playTone(String assetAddress) {
+  stopTone() {
+    _player.stop();
+  }
+
+  _playTone(String assetAddress) {
     AudioSession.instance.then((audioSession) async {
       await audioSession.configure(
         const AudioSessionConfiguration(),
       );
 
-      await player.setAsset(assetAddress);
-      player.play();
+      await _player.setAsset(assetAddress);
+      _player.setLoopMode(LoopMode.all);
+
+      _player.play();
     });
   }
 }

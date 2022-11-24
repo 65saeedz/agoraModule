@@ -79,6 +79,7 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
           final info = 'joined channel:$channel ,uid :$uid';
           //  _channel = channel;
           _infostring.add(info);
+          audioController.playCallingTone();
         });
       },
       leaveChannel: (stats) {
@@ -93,6 +94,7 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
           _infostring.add(info);
           _users.add(uid);
           _controller.start();
+          audioController.stopTone();
         });
       },
       userOffline: (uid, elapsed) {
@@ -193,7 +195,7 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
                     color: const Color(0xffFF4647),
                     func: () {
                       Navigator.of(context).pop();
-                      audioController.player.stop();
+                      audioController.stopTone();
                     },
                     svgIconAddress: 'assets/images/Call.svg',
                   ),
