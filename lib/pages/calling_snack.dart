@@ -4,12 +4,9 @@ import 'package:agora15min/pages/video_call_page.dart';
 import 'package:agora15min/pages/voice_call_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:agora15min/pages/calling_page.dart';
-import 'package:audio_session/audio_session.dart';
-import 'package:just_audio/just_audio.dart' as ja;
 import 'package:agora15min/models/enums/call_type.dart';
 
 class CallingSnack {
@@ -38,11 +35,12 @@ class CallingSnack {
 
   void show() {
     audioController.playRingTone();
+
     showTopSnackBar(
       Overlay.of(context)!,
       _buildChild(),
-      padding: EdgeInsets.fromLTRB(16, 64, 16, 16),
-      displayDuration: Duration(seconds: 30),
+      padding: EdgeInsets.fromLTRB(24, 64, 24, 16),
+      displayDuration: Duration(seconds: 130),
       onAnimationControllerInit: (controller) {
         _animationController = controller;
       },
@@ -70,38 +68,37 @@ class CallingSnack {
             Radius.circular(14),
           ),
         ),
-        height: 90,
+        height: 80,
         child: Row(
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(12, 10, 8, 10),
+            Container(
+              width: 55, height: 55,
+              // color: Colors.amber,
+              margin: EdgeInsets.fromLTRB(12, 0, 6, 0),
+              //  padding: const EdgeInsets.fromLTRB(12, 10, 8, 10),
+              // padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
               child: ClipOval(
                 child: CachedNetworkImage(
                   imageUrl: peerImageUrl,
                 ),
               ),
             ),
-            SizedBox(
-              width: 2,
-            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                SizedBox(
-                  height: 12,
-                ),
                 DefaultTextStyle(
                   child: Text(
                     peerName,
                   ),
                   style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 18,
                       fontWeight: FontWeight.w700,
                       color: Color.fromRGBO(48, 54, 63, 1)),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 6,
                 ),
                 DefaultTextStyle(
                   child: Text(
@@ -110,50 +107,61 @@ class CallingSnack {
                         : 'Voice Calling ...',
                   ),
                   style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 13,
                       fontWeight: FontWeight.w400,
                       color: Color.fromRGBO(134, 133, 138, 1)),
                 )
               ],
             ),
             Spacer(),
-            ElevatedButton(
-              onPressed: () {
+            GestureDetector(
+              onTap: () {
                 _animationController.reverse();
                 audioController.player.stop();
               },
-              child: Padding(
-                padding: const EdgeInsets.all(5),
-                child: SvgPicture.asset(
-                  'assets/images/Call.svg',
-                  width: 28,
-                  height: 12,
+              child: Container(
+                padding: EdgeInsets.all(7),
+                decoration: BoxDecoration(boxShadow: [
+                  BoxShadow(
+                      blurRadius: 4,
+                      offset: Offset(0, 4),
+                      spreadRadius: 0,
+                      color: Color.fromRGBO(17, 190, 127, 0.21))
+                ], shape: BoxShape.circle, color: Color(0xffFF4647)),
+                child: Image.asset(
+                  'assets/images/reject_call.png',
+                  width: 24,
+                  height: 24,
                 ),
-              ),
-              style: ElevatedButton.styleFrom(
-                shape: CircleBorder(),
-                padding: EdgeInsets.all(14),
-                backgroundColor: Color(0xffFF4647),
               ),
             ),
             SizedBox(
-              width: 10,
+              width: 16,
             ),
-            ElevatedButton(
-              onPressed: () {
+            GestureDetector(
+              onTap: () {
                 _animationController.reverse();
 
                 _onAccepted();
               },
-              child: SvgPicture.asset(
-                'assets/images/accept_call.svg',
-                width: 28,
+              child: Container(
+                padding: EdgeInsets.all(8.5),
+                decoration: BoxDecoration(boxShadow: [
+                  BoxShadow(
+                      blurRadius: 4,
+                      offset: Offset(0, 4),
+                      spreadRadius: 0,
+                      color: Color.fromRGBO(17, 190, 127, 0.21))
+                ], shape: BoxShape.circle, color: Color(0xff11BE7F)),
+                child: Image.asset(
+                  'assets/images/accept_call.png',
+                  width: 20,
+                  height: 20,
+                ),
               ),
-              style: ElevatedButton.styleFrom(
-                shape: CircleBorder(),
-                padding: EdgeInsets.all(10),
-                foregroundColor: const Color(0xff11BE7F),
-              ),
+            ),
+            SizedBox(
+              width: 6,
             ),
           ],
         ),
