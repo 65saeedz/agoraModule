@@ -3,6 +3,9 @@ import 'package:agora15min/clients/agora_client.dart';
 import 'package:agora15min/models/enums/call_type.dart';
 import 'package:agora15min/pages/calling_snack.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../controllers/audio/audio_controller.dart';
 
 enum UserRole { callMaker, callReciver }
 
@@ -14,6 +17,8 @@ class TestPage extends StatefulWidget {
 }
 
 class _TestPageState extends State<TestPage> {
+  AudioController audioController = Get.put(AudioController());
+
   final user1Id = '111';
   final user1Token =
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMTEsInVzZXJfcm9sZV9pZCI6MTExLCJsYW5ndWFnZV9zaXRfaWQiOiIxIiwibGFuZ3VhZ2VfdXNlcl9pZCI6bnVsbCwiaWF0IjoxNjY3ODcxMjYyLCJleHAiOjE2NzE0NzEyNjJ9.Ho0HmkTr8RnDD9-AdoyVDrg0T9gnh_Muhx1uPpSGaJ8';
@@ -96,6 +101,7 @@ class _TestPageState extends State<TestPage> {
 
     switch (userRole) {
       case UserRole.callMaker:
+        audioController.playCallingTone();
         agoraClient.makeCall(
           context,
           callType: CallType.voiceCall,
@@ -130,6 +136,8 @@ class _TestPageState extends State<TestPage> {
 
     switch (userRole) {
       case UserRole.callMaker:
+        audioController.playCallingTone();
+
         agoraClient.makeCall(
           context,
           callType: CallType.videoCall,

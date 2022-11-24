@@ -1,15 +1,14 @@
 import 'dart:ui';
-
 import 'package:agora15min/pages/video_call_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import 'package:agora15min/clients/agora_client.dart';
 import 'package:agora15min/models/enums/call_type.dart';
 import 'package:agora15min/pages/voice_call_page.dart';
-
+import 'package:get/get.dart';
+import '../controllers/audio/audio_controller.dart';
 import '../widgets/stack_profile_pic.dart';
 
 class CallingPage extends StatefulWidget {
@@ -37,6 +36,8 @@ class CallingPage extends StatefulWidget {
 }
 
 class _CallingPageState extends State<CallingPage> {
+  AudioController audioController = Get.find();
+
   @override
   void initState() {
     SystemChrome.setPreferredOrientations(
@@ -133,6 +134,7 @@ class _CallingPageState extends State<CallingPage> {
                       const EdgeInsets.symmetric(vertical: 12, horizontal: 52),
                   onPressed: () {
                     Navigator.of(context).pop();
+                    audioController.player.stop();
                   },
                   label: SvgPicture.asset('assets/images/Call.svg')),
               FloatingActionButton.extended(
@@ -152,6 +154,7 @@ class _CallingPageState extends State<CallingPage> {
   Future<void> _onAccepted() async {
     final agoraClient = AgoraClient();
 
+    audioController.player.stop();
     await agoraClient.receiveCall(
       callType: widget.callType,
       userId: widget.userId,

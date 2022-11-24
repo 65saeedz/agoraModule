@@ -1,17 +1,16 @@
 import 'package:agora15min/clients/agora_client.dart';
+import 'package:agora15min/controllers/audio/audio_controller.dart';
 import 'package:agora15min/pages/video_call_page.dart';
 import 'package:agora15min/pages/voice_call_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
-import 'dart:math';
-
+import 'package:agora15min/pages/calling_page.dart';
 import 'package:audio_session/audio_session.dart';
-import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart' as ja;
 import 'package:agora15min/models/enums/call_type.dart';
-import 'package:agora15min/pages/calling_page.dart';
 
 class CallingSnack {
   final BuildContext context;
@@ -35,26 +34,10 @@ class CallingSnack {
     required this.peerImageUrl,
     required this.channelName,
   });
+  AudioController audioController = Get.find();
 
-    final _player = ja.AudioPlayer(
-    // Handle audio_session events ourselves for the purpose of this demo.
-    handleInterruptions: false,
-    androidApplyAudioAttributes: false,
-    handleAudioSessionActivation: false,
-  );
-
-  void show() {    AudioSession.instance.then((audioSession) async {
-      // This line configures the app's audio session, indicating to the OS the
-      // type of audio we intend to play. Using the "speech" recipe rather than
-      // "music" since we are playing a podcast.
-      await audioSession.configure(
-        const AudioSessionConfiguration(),
-      );
-      // Listen to audio interruptions and pause or duck as appropriate.
-    //  _handleInterruptions(audioSession);
-      // Use another plugin to load audio to play.
-      await _player.setAsset("assets/audios/Ringtone 26.mp3");
-    });
+  void show() {
+    audioController.playRingTone();
     showTopSnackBar(
       Overlay.of(context)!,
       _buildChild(),
@@ -137,6 +120,7 @@ class CallingSnack {
             ElevatedButton(
               onPressed: () {
                 _animationController.reverse();
+                audioController.player.stop();
               },
               child: Padding(
                 padding: const EdgeInsets.all(5),
@@ -158,6 +142,7 @@ class CallingSnack {
             ElevatedButton(
               onPressed: () {
                 _animationController.reverse();
+
                 _onAccepted();
               },
               child: SvgPicture.asset(
@@ -196,8 +181,9 @@ class CallingSnack {
   }
 
   void _onAccepted() async {
-    final agoraClient = AgoraClient();
+    audioController.player.stop();
 
+    final agoraClient = AgoraClient();
     await agoraClient.receiveCall(
       callType: callType,
       userId: userId,

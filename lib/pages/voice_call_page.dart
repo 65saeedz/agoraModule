@@ -3,7 +3,9 @@ import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:custom_timer/custom_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 
+import '../controllers/audio/audio_controller.dart';
 import '../widgets/caller_button.dart';
 import '../widgets/custom_fab.dart';
 import '../widgets/timerbox.dart';
@@ -32,6 +34,7 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
   final CustomTimerController _controller = CustomTimerController();
   bool viewPanel = false;
   bool onSpeaker = false;
+  AudioController audioController = Get.find();
 
   @override
   void initState() {
@@ -190,6 +193,7 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
                     color: const Color(0xffFF4647),
                     func: () {
                       Navigator.of(context).pop();
+                      audioController.player.stop();
                     },
                     svgIconAddress: 'assets/images/Call.svg',
                   ),

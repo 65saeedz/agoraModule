@@ -4,7 +4,9 @@ import 'package:agora_rtc_engine/rtc_remote_view.dart' as rtc_remote_value;
 import 'package:custom_timer/custom_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 
+import '../controllers/audio/audio_controller.dart';
 import '../widgets/caller_button.dart';
 import '../widgets/custom_fab.dart';
 import '../widgets/timerbox.dart';
@@ -31,6 +33,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
   bool videoOff = false;
   final CustomTimerController _controller = CustomTimerController();
   bool viewPanel = false;
+  AudioController audioController = Get.find();
 
   @override
   void initState() {
@@ -259,6 +262,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
                   CallerButton(
                     color: const Color(0xffFF4647),
                     func: () {
+                      audioController.player.stop();
                       Navigator.of(context).pop();
                     },
                     svgIconAddress: 'assets/images/Call.svg',
