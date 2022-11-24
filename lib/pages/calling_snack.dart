@@ -126,7 +126,7 @@ class CallingSnack {
                       blurRadius: 4,
                       offset: Offset(0, 4),
                       spreadRadius: 0,
-                      color: Color.fromRGBO(17, 190, 127, 0.21))
+                      color: Color.fromRGBO(255, 70, 71, 0.21))
                 ], shape: BoxShape.circle, color: Color(0xffFF4647)),
                 child: Image.asset(
                   'assets/images/reject_call.png',

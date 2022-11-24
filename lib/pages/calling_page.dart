@@ -1,9 +1,9 @@
 import 'dart:ui';
 import 'package:agora15min/pages/video_call_page.dart';
+import 'package:agora15min/widgets/caller_button.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:agora15min/clients/agora_client.dart';
 import 'package:agora15min/models/enums/call_type.dart';
 import 'package:agora15min/pages/voice_call_page.dart';
@@ -128,22 +128,18 @@ class _CallingPageState extends State<CallingPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              FloatingActionButton.extended(
-                  backgroundColor: const Color(0xffFF4647),
-                  extendedPadding:
-                      const EdgeInsets.symmetric(vertical: 12, horizontal: 52),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    audioController.stopTone();
-                  },
-                  label: SvgPicture.asset('assets/images/Call.svg')),
-              FloatingActionButton.extended(
-                backgroundColor: const Color(0xff11BE7F),
-                extendedPadding:
-                    const EdgeInsets.symmetric(vertical: 12, horizontal: 52),
-                onPressed: _onAccepted,
-                label: SvgPicture.asset('assets/images/accept_call.svg'),
+              CallerButton(
+                func: () {
+                  Navigator.of(context).pop();
+                  audioController.stopTone();
+                },
+                color: Color(0xffFF4647),
+                imageIconAddress: 'assets/images/Call.png',
               ),
+              CallerButton(
+                  func: _onAccepted,
+                  color: Color(0xff11BE7F),
+                  imageIconAddress: 'assets/images/accept_call.png'),
             ],
           )
         ],

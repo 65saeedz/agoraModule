@@ -1,25 +1,27 @@
-
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class CallerButton extends StatelessWidget {
   final void Function() func;
   final Color color;
-  final String svgIconAddress;
+  final String imageIconAddress;
   const CallerButton({
     Key? key,
     required this.func,
     required this.color,
-    required this.svgIconAddress,
+    required this.imageIconAddress,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton.extended(
       backgroundColor: color,
-      extendedPadding:const EdgeInsets.symmetric(vertical: 12, horizontal: 52),
+      extendedPadding: const EdgeInsets.symmetric(vertical: 26, horizontal: 56),
       onPressed: func,
-      label: SvgPicture.asset(svgIconAddress),
+      label: Image.asset(
+        imageIconAddress,
+        width: 40,
+        height: 40,
+      ),
     );
   }
 }

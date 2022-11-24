@@ -38,6 +38,7 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
 
   @override
   void initState() {
+    widget.agoraEngine.setEnableSpeakerphone(onSpeaker);
     SystemChrome.setPreferredOrientations(
       [
         DeviceOrientation.portraitUp,
@@ -171,7 +172,7 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  CustomFAB(iconAddress: 'assets/images/add.svg', func: () {}),
+                  CustomFAB(iconAddress: 'assets/images/add.png', func: () {}),
                 ],
               ),
             ),
@@ -184,7 +185,9 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   CustomFAB(
-                      iconAddress: 'assets/images/microphone-off.svg',
+                      iconAddress: muted
+                          ? 'assets/images/microphone-off.png'
+                          : 'assets/images/microphone-on.png',
                       func: () {
                         setState(() {
                           muted = !muted;
@@ -197,10 +200,12 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
                       Navigator.of(context).pop();
                       audioController.stopTone();
                     },
-                    svgIconAddress: 'assets/images/Call.svg',
+                    imageIconAddress: 'assets/images/Call.png',
                   ),
                   CustomFAB(
-                      iconAddress: 'assets/images/volume-high.svg',
+                      iconAddress: onSpeaker
+                          ? 'assets/images/volume-off.png'
+                          : 'assets/images/volume-high.png',
                       func: () {
                         setState(() {
                           onSpeaker = !onSpeaker;

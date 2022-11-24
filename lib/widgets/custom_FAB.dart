@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomFAB extends StatelessWidget {
   const CustomFAB({
@@ -24,7 +23,7 @@ class CustomFAB extends StatelessWidget {
           fillColor: Colors.white,
           shape: const CircleBorder(), onPressed: func,
           //  elevation: 0.0,
-          child: SvgPicture.asset(
+          child: Image.asset(
             iconAddress,
             color: Colors.black,
             width: 24,

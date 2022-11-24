@@ -33,10 +33,12 @@ class _VideoCallPageState extends State<VideoCallPage> {
   bool videoOff = false;
   final CustomTimerController _controller = CustomTimerController();
   bool viewPanel = false;
+  bool onSpeaker = false;
   AudioController audioController = Get.find();
 
   @override
   void initState() {
+    // widget.agoraEngine.setEnableSpeakerphone(onSpeaker);
     SystemChrome.setPreferredOrientations(
       [
         DeviceOrientation.portraitUp,
@@ -118,161 +120,164 @@ class _VideoCallPageState extends State<VideoCallPage> {
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
     return Scaffold(
-        backgroundColor: const Color(0xff26263F),
-        body: Stack(
-          children: [
-            _users.isEmpty
-                ? Container(
-                    decoration: const BoxDecoration(
-                      color: Color(0xff26263F),
-                      gradient: LinearGradient(
-                          begin: Alignment.bottomCenter,
-                          end: Alignment.topCenter,
-                          colors: [Color(0xff26263F), Colors.transparent]),
-                    ),
-                    child: const rtc_local_value.SurfaceView())
-                : Container(
-                    decoration: const BoxDecoration(
-                      color: Color(0xff26263F),
-                    ),
-                    child: rtc_remote_value.SurfaceView(
-                      uid: _users.first,
-                      channelId: _channel!,
-                    ),
+      backgroundColor: const Color(0xff26263F),
+      body: Stack(
+        children: [
+          _users.isEmpty
+              ? Container(
+                  decoration: const BoxDecoration(
+                    color: Color(0xff26263F),
+                    gradient: LinearGradient(
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                        colors: [Color(0xff26263F), Colors.transparent]),
                   ),
-            Container(
-              padding: const EdgeInsets.fromLTRB(16, 64, 16, 48),
-              width: width,
-              height: height,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.center,
-                    colors: [Color(0xff26263F), Colors.transparent]),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Container()),
-                      _users.isEmpty
-                          ? const SizedBox(
-                              width: 84,
-                              height: 114,
-                            )
-                          : ClipRRect(
-                              borderRadius: BorderRadius.circular(16),
-                              child: Container(
-                                  width: 84,
-                                  height: 114,
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xff26263F),
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  child: const rtc_local_value.SurfaceView()),
-                            ),
-                    ],
+                  child: const rtc_local_value.SurfaceView())
+              : Container(
+                  decoration: const BoxDecoration(
+                    color: Color(0xff26263F),
                   ),
-                  const Spacer(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Opacity(
-                            opacity: 0.7,
-                            child: RichText(
-                              textAlign: TextAlign.left,
-                              text: TextSpan(
-                                text: 'Video Call with \n',
-                                style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w400),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text: widget.peerName,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 19),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 16,
-                          ),
-                          _users.isNotEmpty
-                              ? TimerBox(
-                                  borderCirular: 16.5,
-                                  width: 88,
-                                  height: 32,
-                                  circleSize: 7,
-                                  controller: _controller,
-                                  color: const Color.fromRGBO(41, 45, 50, 0.38),
-                                )
-                              : const SizedBox(
-                                  width: 88,
-                                  height: 32,
-                                ),
-                          const SizedBox(
-                            height: 10,
+                  child: rtc_remote_value.SurfaceView(
+                    uid: _users.first,
+                    channelId: _channel!,
+                  ),
+                ),
+          Container(
+            padding: const EdgeInsets.fromLTRB(16, 64, 16, 48),
+            width: width,
+            height: height,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.center,
+                  colors: [Color(0xff26263F), Colors.transparent]),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Container()),
+                    _users.isEmpty
+                        ? const SizedBox(
+                            width: 84,
+                            height: 114,
                           )
-                        ],
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          CustomFAB(
-                              iconAddress: 'assets/images/add.svg',
-                              func: () {}),
-                          CustomFAB(
-                              iconAddress: 'assets/images/messages.svg',
-                              func: () {}),
-                          CustomFAB(
-                              iconAddress: 'assets/images/microphone-off.svg',
-                              func: () {
-                                setState(() {
-                                  muted = !muted;
-                                });
-                                widget.agoraEngine.muteLocalAudioStream(muted);
-                              }),
-                          CustomFAB(
-                              iconAddress: 'assets/images/video-off.svg',
-                              func: () {
-                                setState(() {
-                                  videoOff = !videoOff;
-                                });
-                                widget.agoraEngine
-                                    .muteLocalVideoStream(videoOff);
-                              }),
-                        ],
-                      )
-                    ],
-                  ),
-                  CallerButton(
-                    color: const Color(0xffFF4647),
-                    func: () {
-                      audioController.stopTone();
-                      Navigator.of(context).pop();
-                    },
-                    svgIconAddress: 'assets/images/Call.svg',
-                  ),
-                ],
-              ),
-            )
-          ],
-        ));
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: Container(
+                                width: 84,
+                                height: 114,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xff26263F),
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: const rtc_local_value.SurfaceView()),
+                          ),
+                  ],
+                ),
+                const Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Opacity(
+                          opacity: 0.7,
+                          child: RichText(
+                            textAlign: TextAlign.left,
+                            text: TextSpan(
+                              text: 'Video Call with \n',
+                              style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w400),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: widget.peerName,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 19),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        _users.isNotEmpty
+                            ? TimerBox(
+                                borderCirular: 16.5,
+                                width: 88,
+                                height: 32,
+                                circleSize: 7,
+                                controller: _controller,
+                                color: const Color.fromRGBO(41, 45, 50, 0.38),
+                              )
+                            : const SizedBox(
+                                width: 88,
+                                height: 32,
+                              ),
+                        const SizedBox(
+                          height: 10,
+                        )
+                      ],
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        CustomFAB(
+                            iconAddress: 'assets/images/add.png', func: () {}),
+                        CustomFAB(
+                            iconAddress: 'assets/images/messages.png',
+                            func: () {}),
+                        CustomFAB(
+                            iconAddress: muted
+                                ? 'assets/images/microphone-off.png'
+                                : 'assets/images/microphone-on.png',
+                            func: () {
+                              setState(() {
+                                muted = !muted;
+                              });
+                              widget.agoraEngine.muteLocalAudioStream(muted);
+                            }),
+                        CustomFAB(
+                            iconAddress: videoOff
+                                ? 'assets/images/video-on.png'
+                                : 'assets/images/video-off.png',
+                            func: () {
+                              setState(() {
+                                videoOff = !videoOff;
+                              });
+                              widget.agoraEngine.muteLocalVideoStream(videoOff);
+                            }),
+                      ],
+                    )
+                  ],
+                ),
+                CallerButton(
+                  color: const Color(0xffFF4647),
+                  func: () {
+                    audioController.stopTone();
+                    Navigator.of(context).pop();
+                  },
+                  imageIconAddress: 'assets/images/Call.png',
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
