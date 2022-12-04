@@ -80,7 +80,6 @@ class _VideoCallPageState extends State<VideoCallPage> {
           final info = 'joined channel:$channel ,uid :$uid';
           _channel = channel;
           _infostring.add(info);
-          audioController.playCallingTone();
         });
       },
       leaveChannel: (stats) {

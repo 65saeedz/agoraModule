@@ -42,6 +42,7 @@ class AgoraClient {
       null,
       int.parse(userId),
     );
+        audioController.playCallingTone();
     switch (callType) {
       case CallType.voiceCall:
         Navigator.push(
