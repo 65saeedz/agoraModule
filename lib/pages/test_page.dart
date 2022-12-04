@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'package:agora15min/clients/agora_client.dart';
-import 'package:agora15min/models/enums/call_type.dart';
-import 'package:agora15min/pages/calling_snack.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../clients/agora_client.dart';
+import '../models/enums/call_type.dart';
+import '../pages/calling_snack.dart';
 import '../controllers/audio/audio_controller.dart';
 
 enum UserRole { callMaker, callReciver }

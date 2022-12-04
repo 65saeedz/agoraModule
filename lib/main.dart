@@ -1,4 +1,4 @@
-import 'package:agora15min/pages/test_page.dart';
+import '../pages/test_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

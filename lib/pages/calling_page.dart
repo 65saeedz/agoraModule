@@ -1,13 +1,14 @@
 import 'dart:ui';
-import 'package:agora15min/pages/video_call_page.dart';
-import 'package:agora15min/widgets/caller_button.dart';
+import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:agora15min/clients/agora_client.dart';
-import 'package:agora15min/models/enums/call_type.dart';
-import 'package:agora15min/pages/voice_call_page.dart';
-import 'package:get/get.dart';
+
+import '../pages/video_call_page.dart';
+import '../widgets/caller_button.dart';
+import '../clients/agora_client.dart';
+import '../models/enums/call_type.dart';
+import '../pages/voice_call_page.dart';
 import '../controllers/audio/audio_controller.dart';
 import '../widgets/stack_profile_pic.dart';
 

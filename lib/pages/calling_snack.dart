@@ -1,13 +1,14 @@
-import 'package:agora15min/clients/agora_client.dart';
-import 'package:agora15min/controllers/audio/audio_controller.dart';
-import 'package:agora15min/pages/video_call_page.dart';
-import 'package:agora15min/pages/voice_call_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
-import 'package:agora15min/pages/calling_page.dart';
-import 'package:agora15min/models/enums/call_type.dart';
+
+import '../pages/calling_page.dart';
+import '../clients/agora_client.dart';
+import '../controllers/audio/audio_controller.dart';
+import '../pages/video_call_page.dart';
+import '../pages/voice_call_page.dart';
+import '../models/enums/call_type.dart';
 
 class CallingSnack {
   final BuildContext context;

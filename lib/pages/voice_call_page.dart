@@ -1,4 +1,4 @@
-import 'package:agora15min/widgets/stack_profile_pic.dart';
+import '../widgets/stack_profile_pic.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:custom_timer/custom_timer.dart';
 import 'package:flutter/material.dart';

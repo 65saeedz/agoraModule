@@ -1,5 +1,5 @@
-import 'package:agora15min/models/agora_token_query.dart';
-import 'package:agora15min/models/agora_token_response.dart';
+import '../models/agora_token_query.dart';
+import '../models/agora_token_response.dart';
 import 'package:dio/dio.dart';
 
 class HttpClient {

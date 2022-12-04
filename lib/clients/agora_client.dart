@@ -1,13 +1,13 @@
-import 'package:agora15min/clients/http_client.dart';
-import 'package:agora15min/models/agora_token_query.dart';
-import 'package:agora15min/models/enums/call_type.dart';
-import 'package:agora15min/pages/video_call_page.dart';
-import 'package:agora15min/pages/voice_call_page.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../clients/http_client.dart';
+import '../models/agora_token_query.dart';
+import '../models/enums/call_type.dart';
+import '../pages/video_call_page.dart';
+import '../pages/voice_call_page.dart';
 import '../controllers/audio/audio_controller.dart';
 
 class AgoraClient {
