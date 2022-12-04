@@ -42,7 +42,7 @@ class AgoraClient {
       null,
       int.parse(userId),
     );
-        audioController.playCallingTone();
+
     switch (callType) {
       case CallType.voiceCall:
         Navigator.push(
@@ -55,6 +55,8 @@ class AgoraClient {
             ),
           ),
         );
+        
+        audioController.playCallingTone();
         break;
 
       case CallType.videoCall:
@@ -67,6 +69,8 @@ class AgoraClient {
             ),
           ),
         );
+        audioController.playCallingTone();
+
         break;
     }
   }

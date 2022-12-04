@@ -95,6 +95,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
           _users.add(uid);
           _controller.start();
           audioController.stopTone();
+          
         });
       },
       userOffline: (uid, elapsed) {

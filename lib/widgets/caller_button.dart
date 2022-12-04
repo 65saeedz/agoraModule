@@ -15,12 +15,15 @@ class CallerButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FloatingActionButton.extended(
       backgroundColor: color,
-      extendedPadding: const EdgeInsets.symmetric(vertical: 26, horizontal: 56),
+      extendedPadding: EdgeInsets.symmetric(
+          vertical: 26,
+          horizontal:
+              imageIconAddress == 'assets/images/accept_call.png' ? 62 : 56),
       onPressed: func,
       label: Image.asset(
         imageIconAddress,
-        width: 40,
-        height: 40,
+        width: imageIconAddress == 'assets/images/accept_call.png' ? 31 : 40,
+        height: imageIconAddress == 'assets/images/accept_call.png' ? 32 : 40,
       ),
     );
   }
