@@ -37,7 +37,7 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
   AudioController audioController = Get.find();
 
   @override
-  void initState() {
+  void initState() { 
     widget.agoraEngine.setEnableSpeakerphone(onSpeaker);
     SystemChrome.setPreferredOrientations(
       [

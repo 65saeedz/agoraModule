@@ -55,7 +55,7 @@ class AgoraClient {
             ),
           ),
         );
-        
+
         audioController.playCallingTone();
         break;
 
@@ -125,5 +125,7 @@ class AgoraClient {
       await Permission.camera.request();
     }
     await Permission.microphone.request();
+    await Permission.bluetoothConnect.request();
+    await Permission.bluetooth.request();
   }
 }

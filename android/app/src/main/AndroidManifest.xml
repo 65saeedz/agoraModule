@@ -31,4 +31,7 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
+
+    <!-- The Agora SDK requires Bluetooth permissions in case users are using Bluetooth devices.-->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
 </manifest>
