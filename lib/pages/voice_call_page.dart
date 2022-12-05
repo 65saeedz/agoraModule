@@ -126,7 +126,9 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
             _users.add(uid);
             widget.timerController.start();
             widget.audioController.stopTone();
+            _agoraEngine!.setEnableSpeakerphone(_onSpeaker);
           });
+          setState(() {});
         },
         userOffline: (uid, elapsed) {
           setState(() {
@@ -143,7 +145,6 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
         },
       ),
     );
-    _agoraEngine!.setEnableSpeakerphone(_onSpeaker);
   }
 
   @override
@@ -219,7 +220,7 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
                       iconAddress: _muted
                           ? 'assets/images/microphone-off.png'
                           : 'assets/images/microphone-on.png',
-                      func: _agoraEngine == null
+                      func: (_agoraEngine == null || _users.isEmpty)
                           ? null
                           : () {
                               setState(() {
@@ -239,7 +240,7 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
                       iconAddress: _onSpeaker
                           ? 'assets/images/volume-high.png'
                           : 'assets/images/volume-off.png',
-                      func: _agoraEngine == null
+                      func: (_agoraEngine == null || _users.isEmpty)
                           ? null
                           : () {
                               setState(() {
