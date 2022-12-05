@@ -4,16 +4,32 @@ import 'package:just_audio/just_audio.dart';
 
 class AudioController extends GetxController {
   final _player = AudioPlayer(
-    handleInterruptions: false,
-    androidApplyAudioAttributes: false,
-    handleAudioSessionActivation: false,
-  );
+      // handleInterruptions: false,
+      // androidApplyAudioAttributes: false,
+      // handleAudioSessionActivation: false,
+      );
+  @override
+  void onClose() {
+    _player.dispose();
 
-  playCallingTone() {
+    super.onClose();
+  }
+
+  playCallingToneAudio() {
     _player.setAndroidAudioAttributes(
       AndroidAudioAttributes(
         contentType: AndroidAudioContentType.speech,
         usage: AndroidAudioUsage.voiceCommunicationSignalling,
+      ),
+    );
+    _playTone("assets/audios/calling.mp3");
+  }
+
+  playCallingToneVideo() {
+    _player.setAndroidAudioAttributes(
+      AndroidAudioAttributes(
+        contentType: AndroidAudioContentType.unknown,
+        usage: AndroidAudioUsage.unknown,
       ),
     );
     _playTone("assets/audios/calling.mp3");

@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import '../pages/video_call_page.dart';
 import '../widgets/caller_button.dart';
 import '../clients/agora_client.dart';
-import '../models/enums/call_type.dart';
+import '../models/enums/enums.dart';
 import '../pages/voice_call_page.dart';
 import '../controllers/audio/audio_controller.dart';
 import '../widgets/stack_profile_pic.dart';
@@ -166,9 +166,13 @@ class _CallingPageState extends State<CallingPage> {
             context,
             MaterialPageRoute(
               builder: (context) => VoiceCallPage(
-                agoraEngine: agoraClient.engine,
+                channelName: widget.channelName,
                 peerName: widget.peerName,
+                peerId: widget.peerId,
+                userId: widget.userId,
                 peerImageUrl: widget.peerImageUrl,
+                userRole: UserRole.callReciver,
+                userToken: widget.userToken,
               ),
             ),
           );
@@ -178,8 +182,13 @@ class _CallingPageState extends State<CallingPage> {
             context,
             MaterialPageRoute(
               builder: (context) => VideoCallPage(
-                agoraEngine: agoraClient.engine,
+                channelName: widget.channelName,
                 peerName: widget.peerName,
+                peerId: widget.peerId,
+                userId: widget.userId,
+                peerImageUrl: widget.peerImageUrl,
+                userRole: UserRole.callReciver,
+                userToken: widget.userToken,
               ),
             ),
           );

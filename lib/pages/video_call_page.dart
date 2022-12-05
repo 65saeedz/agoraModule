@@ -1,3 +1,5 @@
+import 'package:agora15min/clients/agora_client.dart';
+import 'package:agora15min/models/enums/enums.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as rtc_local_value;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as rtc_remote_value;
@@ -12,33 +14,43 @@ import '../widgets/custom_fab.dart';
 import '../widgets/timerbox.dart';
 
 class VideoCallPage extends StatefulWidget {
-  final RtcEngine agoraEngine;
-  final String peerName;
-
-  const VideoCallPage({
-    Key? key,
-    required this.agoraEngine,
+  VideoCallPage({
+    super.key,
+    this.userRole = UserRole.callMaker,
+    required this.userId,
+    required this.userToken,
+    required this.peerId,
     required this.peerName,
-  }) : super(key: key);
+    required this.peerImageUrl,
+    required this.channelName,
+  });
+
+  final UserRole userRole;
+  final String userId;
+  final String userToken;
+  final String peerId;
+  final String peerName;
+  final String peerImageUrl;
+  final String channelName;
+
+  final agoraClient = AgoraClient();
+  final timerController = CustomTimerController();
+  final audioController = Get.find<AudioController>();
 
   @override
   State<VideoCallPage> createState() => _VideoCallPageState();
 }
 
 class _VideoCallPageState extends State<VideoCallPage> {
+  RtcEngine? _agoraEngine;
   final _users = <int>[];
   final _infostring = <String>[];
   String? _channel;
-  bool muted = false;
-  bool videoOff = false;
-  final CustomTimerController _controller = CustomTimerController();
-  bool viewPanel = false;
-  bool onSpeaker = false;
-  AudioController audioController = Get.find();
+  bool _muted = false;
+  bool _videoOff = false;
 
   @override
   void initState() {
-    // widget.agoraEngine.setEnableSpeakerphone(onSpeaker);
     SystemChrome.setPreferredOrientations(
       [
         DeviceOrientation.portraitUp,
@@ -60,65 +72,91 @@ class _VideoCallPageState extends State<VideoCallPage> {
         DeviceOrientation.landscapeRight,
       ],
     );
+
     _users.clear();
-    widget.agoraEngine.leaveChannel();
-    widget.agoraEngine.destroy();
+    if (_agoraEngine != null) {
+      _agoraEngine!.leaveChannel();
+      _agoraEngine!.destroy();
+    }
 
     super.dispose();
   }
 
   Future<void> _initialize() async {
-    widget.agoraEngine.setEventHandler(RtcEngineEventHandler(
-      error: (code) {
-        setState(() {
-          final info = 'error :$code';
-          _infostring.add(info);
-        });
-      },
-      joinChannelSuccess: (channel, uid, elapsed) {
-        setState(() {
-          final info = 'joined channel:$channel ,uid :$uid';
-          _channel = channel;
-          _infostring.add(info);
-        });
-      },
-      leaveChannel: (stats) {
-        setState(() {
-          _infostring.add('leave channel');
-          _users.clear();
-        });
-      },
-      userJoined: (uid, elapsed) {
-        setState(() {
-          final info = 'user joined:$uid';
-          _infostring.add(info);
-          _users.add(uid);
-          _controller.start();
-          audioController.stopTone();
-          
-        });
-      },
-      userOffline: (uid, elapsed) {
-        setState(() {
-          final info = 'user offline:$uid';
-          _infostring.add(info);
-          // _users.remove(uid);
-          _users.clear();
-        });
-      },
-      firstRemoteVideoFrame: (uid, width, height, elapsed) {
-        setState(() {
-          final info = 'first remote video :$uid $width *$height';
-          _infostring.add(info);
-        });
-      },
-    ));
+    if (widget.userRole == UserRole.callMaker) {
+      _agoraEngine = await widget.agoraClient.makeCall(
+        callType: CallType.videoCall,
+        userId: widget.userId,
+        userToken: widget.userToken,
+        peerId: widget.peerId,
+      );
+      // widget.audioController.playCallingTone();
+    } else {
+      _agoraEngine = await widget.agoraClient.receiveCall(
+        callType: CallType.videoCall,
+        userId: widget.userId,
+        userToken: widget.userToken,
+        peerId: widget.peerId,
+        channelName: widget.channelName,
+      );
+    }
+    setState(() {});
+
+    _agoraEngine!.setEventHandler(
+      RtcEngineEventHandler(
+        error: (code) {
+          setState(() {
+            final info = 'error :$code';
+            _infostring.add(info);
+          });
+        },
+        joinChannelSuccess: (channel, uid, elapsed) {
+          setState(() {
+            final info = 'joined channel:$channel ,uid :$uid';
+            _infostring.add(info);
+            _channel = channel;
+          });
+        },
+        leaveChannel: (stats) {
+          setState(() {
+            _infostring.add('leave channel');
+            _users.clear();
+          });
+        },
+        userJoined: (uid, elapsed) {
+          setState(() {
+            final info = 'user joined:$uid';
+            _infostring.add(info);
+            _users.add(uid);
+            widget.timerController.start();
+            widget.audioController.stopTone();
+          });
+        },
+        userOffline: (uid, elapsed) {
+          setState(() {
+            final info = 'user offline:$uid';
+            _infostring.add(info);
+            _users.clear();
+          });
+        },
+        firstRemoteVideoFrame: (uid, width, height, elapsed) {
+          setState(() {
+            final info = 'first remote video :$uid $width *$height';
+            _infostring.add(info);
+          });
+        },
+      ),
+    );
+
+    _agoraEngine!.setEnableSpeakerphone(true);
+    _agoraEngine!.setDefaultAudioRouteToSpeakerphone(true);
   }
 
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: const Color(0xff26263F),
       body: Stack(
@@ -132,15 +170,20 @@ class _VideoCallPageState extends State<VideoCallPage> {
                         end: Alignment.topCenter,
                         colors: [Color(0xff26263F), Colors.transparent]),
                   ),
-                  child: const rtc_local_value.SurfaceView())
+                  child: _agoraEngine == null
+                      ? null
+                      : const rtc_local_value.SurfaceView(),
+                )
               : Container(
                   decoration: const BoxDecoration(
                     color: Color(0xff26263F),
                   ),
-                  child: rtc_remote_value.SurfaceView(
-                    uid: _users.first,
-                    channelId: _channel!,
-                  ),
+                  child: _agoraEngine == null
+                      ? null
+                      : rtc_remote_value.SurfaceView(
+                          uid: _users.first,
+                          channelId: _channel!,
+                        ),
                 ),
           Container(
             padding: const EdgeInsets.fromLTRB(16, 64, 16, 48),
@@ -172,13 +215,16 @@ class _VideoCallPageState extends State<VideoCallPage> {
                         : ClipRRect(
                             borderRadius: BorderRadius.circular(16),
                             child: Container(
-                                width: 84,
-                                height: 114,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xff26263F),
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                child: const rtc_local_value.SurfaceView()),
+                              width: 84,
+                              height: 114,
+                              decoration: BoxDecoration(
+                                color: const Color(0xff26263F),
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: _agoraEngine == null
+                                  ? null
+                                  : const rtc_local_value.SurfaceView(),
+                            ),
                           ),
                   ],
                 ),
@@ -221,7 +267,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
                                 width: 88,
                                 height: 32,
                                 circleSize: 7,
-                                controller: _controller,
+                                controller: widget.timerController,
                                 color: const Color.fromRGBO(41, 45, 50, 0.38),
                               )
                             : const SizedBox(
@@ -242,25 +288,30 @@ class _VideoCallPageState extends State<VideoCallPage> {
                             iconAddress: 'assets/images/messages.png',
                             func: () {}),
                         CustomFAB(
-                            iconAddress: muted
+                            iconAddress: _muted
                                 ? 'assets/images/microphone-off.png'
                                 : 'assets/images/microphone-on.png',
-                            func: () {
-                              setState(() {
-                                muted = !muted;
-                              });
-                              widget.agoraEngine.muteLocalAudioStream(muted);
-                            }),
+                            func: (_agoraEngine == null || _users.isEmpty)
+                                ? null
+                                : () {
+                                    setState(() {
+                                      _muted = !_muted;
+                                    });
+                                    _agoraEngine!.muteLocalAudioStream(_muted);
+                                  }),
                         CustomFAB(
-                            iconAddress: videoOff
-                                ? 'assets/images/video-on.png'
-                                : 'assets/images/video-off.png',
-                            func: () {
-                              setState(() {
-                                videoOff = !videoOff;
-                              });
-                              widget.agoraEngine.muteLocalVideoStream(videoOff);
-                            }),
+                            iconAddress: _videoOff
+                                ? 'assets/images/video-off.png'
+                                : 'assets/images/video-on.png',
+                            func: (_agoraEngine == null || _users.isEmpty)
+                                ? null
+                                : () {
+                                    setState(() {
+                                      _videoOff = !_videoOff;
+                                    });
+                                    _agoraEngine!
+                                        .muteLocalVideoStream(_videoOff);
+                                  }),
                       ],
                     )
                   ],
@@ -268,7 +319,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
                 CallerButton(
                   color: const Color(0xffFF4647),
                   func: () {
-                    audioController.stopTone();
+                    widget.audioController.stopTone();
                     Navigator.of(context).pop();
                   },
                   imageIconAddress: 'assets/images/Call.png',

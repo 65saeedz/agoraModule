@@ -4,11 +4,10 @@ import 'package:get/get.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 import '../pages/calling_page.dart';
-import '../clients/agora_client.dart';
 import '../controllers/audio/audio_controller.dart';
 import '../pages/video_call_page.dart';
 import '../pages/voice_call_page.dart';
-import '../models/enums/call_type.dart';
+import '../models/enums/enums.dart';
 
 class CallingSnack {
   final BuildContext context;
@@ -32,7 +31,7 @@ class CallingSnack {
     required this.peerImageUrl,
     required this.channelName,
   });
-  AudioController audioController = Get.find();
+  final audioController = Get.find<AudioController>();
 
   void show() {
     audioController.playRingTone();
@@ -45,10 +44,7 @@ class CallingSnack {
       onAnimationControllerInit: (controller) {
         _animationController = controller;
       },
-      dismissType: DismissType.onSwipe,
-      dismissDirection: const [
-        DismissDirection.up,
-      ],
+      dismissType: DismissType.none,
     );
   }
 
@@ -189,24 +185,18 @@ class CallingSnack {
     );
   }
 
-  void _onAccepted() async {
-    audioController.stopTone();
-
-    final agoraClient = AgoraClient();
-    await agoraClient.receiveCall(
-      callType: callType,
-      userId: userId,
-      userToken: userToken,
-      peerId: peerId,
-      channelName: channelName,
-    );
+  void _onAccepted() {
     switch (callType) {
       case CallType.voiceCall:
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => VoiceCallPage(
-              agoraEngine: agoraClient.engine,
+              userRole: UserRole.callReciver,
+              channelName: channelName,
+              userToken: userToken,
+              peerId: peerId,
+              userId: userId,
               peerName: peerName,
               peerImageUrl: peerImageUrl,
             ),
@@ -218,12 +208,18 @@ class CallingSnack {
           context,
           MaterialPageRoute(
             builder: (context) => VideoCallPage(
-              agoraEngine: agoraClient.engine,
+              userRole: UserRole.callReciver,
+              channelName: channelName,
+              userToken: userToken,
+              peerId: peerId,
+              userId: userId,
               peerName: peerName,
+              peerImageUrl: peerImageUrl,
             ),
           ),
         );
         break;
     }
+    audioController.stopTone();
   }
 }

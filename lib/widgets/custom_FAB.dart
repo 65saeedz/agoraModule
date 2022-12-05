@@ -4,11 +4,11 @@ class CustomFAB extends StatelessWidget {
   const CustomFAB({
     Key? key,
     required this.iconAddress,
-    required this.func,
+    this.func,
   }) : super(key: key);
 
   final String iconAddress;
-  final void Function() func;
+  final void Function()? func;
 
   @override
   Widget build(BuildContext context) {

@@ -1,44 +1,54 @@
-import '../widgets/stack_profile_pic.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:custom_timer/custom_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+import '../clients/agora_client.dart';
+import '../models/enums/enums.dart';
+import '../widgets/stack_profile_pic.dart';
 import '../controllers/audio/audio_controller.dart';
 import '../widgets/caller_button.dart';
 import '../widgets/custom_fab.dart';
 import '../widgets/timerbox.dart';
 
 class VoiceCallPage extends StatefulWidget {
-  final RtcEngine agoraEngine;
-  final String peerName;
-  final String peerImageUrl;
-
-  const VoiceCallPage({
+  VoiceCallPage({
     super.key,
-    required this.agoraEngine,
+    this.userRole = UserRole.callMaker,
+    required this.userId,
+    required this.userToken,
+    required this.peerId,
     required this.peerName,
     required this.peerImageUrl,
+    required this.channelName,
   });
+
+  final UserRole userRole;
+  final String userId;
+  final String userToken;
+  final String peerId;
+  final String peerName;
+  final String peerImageUrl;
+  final String channelName;
+
+  final agoraClient = AgoraClient();
+  final timerController = CustomTimerController();
+  final audioController = Get.find<AudioController>();
 
   @override
   State<VoiceCallPage> createState() => _VoiceCallPageState();
 }
 
 class _VoiceCallPageState extends State<VoiceCallPage> {
+  RtcEngine? _agoraEngine;
   final _users = <int>[];
   final _infostring = <String>[];
-  bool muted = false;
-  bool videoOff = false;
-  final CustomTimerController _controller = CustomTimerController();
-  bool viewPanel = false;
-  bool onSpeaker = false;
-  AudioController audioController = Get.find();
+  bool _muted = false;
+  bool _onSpeaker = false;
 
   @override
-  void initState() { 
-    widget.agoraEngine.setEnableSpeakerphone(onSpeaker);
+  void initState() {
     SystemChrome.setPreferredOrientations(
       [
         DeviceOrientation.portraitUp,
@@ -60,58 +70,80 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
         DeviceOrientation.landscapeRight,
       ],
     );
+
     _users.clear();
-    widget.agoraEngine.leaveChannel();
-    widget.agoraEngine.destroy();
+    if (_agoraEngine != null) {
+      _agoraEngine!.leaveChannel();
+      _agoraEngine!.destroy();
+    }
 
     super.dispose();
   }
 
   Future<void> _initialize() async {
-    widget.agoraEngine.setEventHandler(RtcEngineEventHandler(
-      error: (code) {
-        setState(() {
-          final info = 'error :$code';
-          _infostring.add(info);
-        });
-      },
-      joinChannelSuccess: (channel, uid, elapsed) {
-        setState(() {
-          final info = 'joined channel:$channel ,uid :$uid';
-          //  _channel = channel;
-          _infostring.add(info);
-        });
-      },
-      leaveChannel: (stats) {
-        setState(() {
-          _infostring.add('leave channel');
-          _users.clear();
-        });
-      },
-      userJoined: (uid, elapsed) {
-        setState(() {
-          final info = 'user joined:$uid';
-          _infostring.add(info);
-          _users.add(uid);
-          _controller.start();
-          audioController.stopTone();
-        });
-      },
-      userOffline: (uid, elapsed) {
-        setState(() {
-          final info = 'user offline:$uid';
-          _infostring.add(info);
-          // _users.remove(uid);
-          _users.clear();
-        });
-      },
-      firstRemoteVideoFrame: (uid, width, height, elapsed) {
-        setState(() {
-          final info = 'first remote video :$uid $width *$height';
-          _infostring.add(info);
-        });
-      },
-    ));
+    if (widget.userRole == UserRole.callMaker) {
+      _agoraEngine = await widget.agoraClient.makeCall(
+        callType: CallType.voiceCall,
+        userId: widget.userId,
+        userToken: widget.userToken,
+        peerId: widget.peerId,
+      );
+    } else {
+      _agoraEngine = await widget.agoraClient.receiveCall(
+          callType: CallType.voiceCall,
+          userId: widget.userId,
+          userToken: widget.userToken,
+          peerId: widget.peerId,
+          channelName: widget.channelName);
+    }
+
+    setState(() {});
+    _agoraEngine!.setEventHandler(
+      RtcEngineEventHandler(
+        error: (code) {
+          setState(() {
+            final info = 'error :$code';
+            _infostring.add(info);
+          });
+        },
+        joinChannelSuccess: (channel, uid, elapsed) {
+          setState(() {
+            final info = 'joined channel:$channel ,uid :$uid';
+            //  _channel = channel;
+            _infostring.add(info);
+          });
+        },
+        leaveChannel: (stats) {
+          setState(() {
+            _infostring.add('leave channel');
+            _users.clear();
+          });
+        },
+        userJoined: (uid, elapsed) {
+          setState(() {
+            final info = 'user joined:$uid';
+            _infostring.add(info);
+            _users.add(uid);
+            widget.timerController.start();
+            widget.audioController.stopTone();
+          });
+        },
+        userOffline: (uid, elapsed) {
+          setState(() {
+            final info = 'user offline:$uid';
+            _infostring.add(info);
+            _users.clear();
+          });
+        },
+        firstRemoteVideoFrame: (uid, width, height, elapsed) {
+          setState(() {
+            final info = 'first remote video :$uid $width *$height';
+            _infostring.add(info);
+          });
+        },
+      ),
+    );
+    _agoraEngine!.setEnableSpeakerphone(_onSpeaker);
   }
 
   @override
@@ -162,7 +194,7 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
                 circleSize: 10,
                 height: 44,
                 width: 102,
-                controller: _controller,
+                controller: widget.timerController,
                 color: const Color(0xff353551),
               ),
             const Spacer(),
@@ -184,34 +216,38 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   CustomFAB(
-                      iconAddress: muted
+                      iconAddress: _muted
                           ? 'assets/images/microphone-off.png'
                           : 'assets/images/microphone-on.png',
-                      func: () {
-                        setState(() {
-                          muted = !muted;
-                        });
-                        widget.agoraEngine.muteLocalAudioStream(muted);
-                      }),
+                      func: _agoraEngine == null
+                          ? null
+                          : () {
+                              setState(() {
+                                _muted = !_muted;
+                              });
+                              _agoraEngine!.muteLocalAudioStream(_muted);
+                            }),
                   CallerButton(
                     color: const Color(0xffFF4647),
                     func: () {
                       Navigator.of(context).pop();
-                      audioController.stopTone();
+                      widget.audioController.stopTone();
                     },
                     imageIconAddress: 'assets/images/Call.png',
                   ),
                   CustomFAB(
-                      iconAddress: onSpeaker
-                          ? 'assets/images/volume-off.png'
-                          : 'assets/images/volume-high.png',
-                      func: () {
-                        setState(() {
-                          onSpeaker = !onSpeaker;
-                        });
-                        widget.agoraEngine.setEnableSpeakerphone(onSpeaker);
-                        print(onSpeaker);
-                      }),
+                      iconAddress: _onSpeaker
+                          ? 'assets/images/volume-high.png'
+                          : 'assets/images/volume-off.png',
+                      func: _agoraEngine == null
+                          ? null
+                          : () {
+                              setState(() {
+                                _onSpeaker = !_onSpeaker;
+                              });
+                              _agoraEngine!.setEnableSpeakerphone(_onSpeaker);
+                              print(_onSpeaker);
+                            }),
                 ],
               ),
             ),

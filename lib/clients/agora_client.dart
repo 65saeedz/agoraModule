@@ -1,121 +1,72 @@
 import 'package:agora_rtc_engine/rtc_engine.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../clients/http_client.dart';
 import '../models/agora_token_query.dart';
-import '../models/enums/call_type.dart';
-import '../pages/video_call_page.dart';
-import '../pages/voice_call_page.dart';
+import '../models/enums/enums.dart';
 import '../controllers/audio/audio_controller.dart';
 
 class AgoraClient {
   final _appId = 'a5b85475a1e34748a324db9d58622d98';
-  late RtcEngine engine;
-  final httpClient = HttpClient();
-  AudioController audioController = Get.find();
+  final _httpClient = HttpClient();
+  final _audioController = Get.find<AudioController>();
 
-  Future<void> makeCall(
-    BuildContext context, {
+  late RtcEngine _engine;
+
+  Future<RtcEngine> makeCall({
     required CallType callType,
     required String userId,
     required String userToken,
     required String peerId,
-    required String peerName,
-    required String peerImageUrl,
   }) async {
+    await _handlePermissions(callType: callType);
     await _initialize(callType: callType);
 
-    final agoraTokenResponse = await httpClient.fetchAgoraToken(
+    callType == CallType.voiceCall
+        ? _audioController.playCallingToneAudio()
+        : _audioController.playCallingToneVideo();
+    final agoraTokenResponse = await _httpClient.fetchAgoraToken(
       AgoraTokenQuery(
         token: userToken,
         user_role_id: peerId,
       ),
     );
-
-    await _handlePermissions(callType: callType);
-
-    await engine.joinChannel(
+    await _engine.joinChannel(
       agoraTokenResponse.token,
       agoraTokenResponse.chanelName,
       null,
       int.parse(userId),
     );
 
-    switch (callType) {
-      case CallType.voiceCall:
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => VoiceCallPage(
-              agoraEngine: engine,
-              peerName: peerName,
-              peerImageUrl: peerImageUrl,
-            ),
-          ),
-        );
-
-        audioController.playCallingTone();
-        break;
-
-      case CallType.videoCall:
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => VideoCallPage(
-              agoraEngine: engine,
-              peerName: peerName,
-            ),
-          ),
-        );
-        audioController.playCallingTone();
-
-        break;
-    }
+    return _engine;
   }
 
-  Future<void> receiveCall({
+  Future<RtcEngine> receiveCall({
     required CallType callType,
     required String userId,
     required String userToken,
     required String peerId,
     required String channelName,
   }) async {
+    await _handlePermissions(callType: callType);
     await _initialize(callType: callType);
 
-    final agoraTokenResponse = await httpClient.fetchAgoraToken(
+    final agoraTokenResponse = await _httpClient.fetchAgoraToken(
       AgoraTokenQuery(
         token: userToken,
         user_role_id: peerId,
         chanelName: channelName,
       ),
     );
-
-    await _handlePermissions(callType: callType);
-
-    await engine.joinChannel(
+    await _engine.joinChannel(
       agoraTokenResponse.token,
       channelName,
       null,
       int.parse(userId),
     );
-  }
 
-  Future<void> _initialize({
-    required CallType callType,
-  }) async {
-    engine = await RtcEngine.create(_appId);
-    if (callType == CallType.videoCall) {
-      await engine.enableVideo();
-    }
-    await engine.setChannelProfile(ChannelProfile.LiveBroadcasting);
-    await engine.setClientRole(ClientRole.Broadcaster);
-    if (callType == CallType.videoCall) {
-      VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
-      configuration.dimensions = const VideoDimensions();
-      await engine.setVideoEncoderConfiguration(configuration);
-    }
+    return _engine;
   }
 
   Future<void> _handlePermissions({
@@ -126,6 +77,21 @@ class AgoraClient {
     }
     await Permission.microphone.request();
     await Permission.bluetoothConnect.request();
-    await Permission.bluetooth.request();
+  }
+
+  Future<void> _initialize({
+    required CallType callType,
+  }) async {
+    _engine = await RtcEngine.create(_appId);
+    if (callType == CallType.videoCall) {
+      await _engine.enableVideo();
+    }
+    await _engine.setChannelProfile(ChannelProfile.LiveBroadcasting);
+    await _engine.setClientRole(ClientRole.Broadcaster);
+    if (callType == CallType.videoCall) {
+      VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
+      configuration.dimensions = const VideoDimensions();
+      await _engine.setVideoEncoderConfiguration(configuration);
+    }
   }
 }

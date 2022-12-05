@@ -2,12 +2,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../clients/agora_client.dart';
-import '../models/enums/call_type.dart';
+import '../pages/video_call_page.dart';
+import '../pages/voice_call_page.dart';
+import '../models/enums/enums.dart';
 import '../pages/calling_snack.dart';
 import '../controllers/audio/audio_controller.dart';
-
-enum UserRole { callMaker, callReciver }
 
 class TestPage extends StatefulWidget {
   const TestPage({super.key});
@@ -17,8 +16,6 @@ class TestPage extends StatefulWidget {
 }
 
 class _TestPageState extends State<TestPage> {
-  AudioController audioController = Get.put(AudioController());
-
   final user1Id = '149';
   final user1Token =
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxNDksInVzZXJfcm9sZV9pZCI6MTQ5LCJsYW5ndWFnZV9zaXRfaWQiOiIxIiwibGFuZ3VhZ2VfdXNlcl9pZCI6bnVsbCwiaWF0IjoxNjcwMTQ1NDEwLCJleHAiOjE2NzM3NDU0MTB9.iq-OiWxq_tX89G61F5ki0umdQ2czP78UKSj3TBjYV6M';
@@ -34,6 +31,7 @@ class _TestPageState extends State<TestPage> {
   final channelName = 'chat_149';
   UserRole? userRole = UserRole.callMaker;
 
+  final audioController = Get.put(AudioController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,27 +93,28 @@ class _TestPageState extends State<TestPage> {
     );
   }
 
-  Future<void> onVoiceCall() async {
-    final agoraClient = AgoraClient();
-
+  Future<void> onVideoCall() async {
     switch (userRole) {
       case UserRole.callMaker:
-        //  audioController.playCallingTone();
-        agoraClient.makeCall(
+        Navigator.push(
           context,
-          callType: CallType.voiceCall,
-          userId: user1Id,
-          userToken: user1Token,
-          peerId: user2Id,
-          peerName: user2Name,
-          peerImageUrl: user2ImageUrl,
+          MaterialPageRoute(
+            builder: (context) => VideoCallPage(
+              userId: user1Id,
+              userToken: user1Token,
+              peerId: user2Id,
+              peerName: user2Name,
+              peerImageUrl: user2ImageUrl,
+              channelName: channelName,
+            ),
+          ),
         );
         break;
 
       case UserRole.callReciver:
         CallingSnack(
           context,
-          callType: CallType.voiceCall,
+          callType: CallType.videoCall,
           userId: user2Id,
           userToken: user2Token,
           peerId: user1Id,
@@ -130,28 +129,28 @@ class _TestPageState extends State<TestPage> {
     }
   }
 
-  Future<void> onVideoCall() async {
-    final agoraClient = AgoraClient();
-
+  Future<void> onVoiceCall() async {
     switch (userRole) {
       case UserRole.callMaker:
-        //  audioController.playCallingTone();
-
-        agoraClient.makeCall(
+        Navigator.push(
           context,
-          callType: CallType.videoCall,
-          userId: user1Id,
-          userToken: user1Token,
-          peerId: user2Id,
-          peerName: user2Name,
-          peerImageUrl: user2ImageUrl,
+          MaterialPageRoute(
+            builder: (context) => VoiceCallPage(
+              userId: user1Id,
+              userToken: user1Token,
+              peerId: user2Id,
+              peerName: user2Name,
+              peerImageUrl: user2ImageUrl,
+              channelName: channelName,
+            ),
+          ),
         );
         break;
 
       case UserRole.callReciver:
         CallingSnack(
           context,
-          callType: CallType.videoCall,
+          callType: CallType.voiceCall,
           userId: user2Id,
           userToken: user2Token,
           peerId: user1Id,
