@@ -29,7 +29,9 @@ class AgoraClient {
     final agoraTokenResponse = await _httpClient.fetchAgoraToken(
       AgoraTokenQuery(
         token: userToken,
-        user_role_id: peerId,
+        caller_id: int.parse(userId),
+        pree_id: int.parse(peerId),
+        has_video: callType == CallType.videoCall ? 1 : 0,
       ),
     );
     await _engine.joinChannel(
@@ -55,8 +57,8 @@ class AgoraClient {
     final agoraTokenResponse = await _httpClient.fetchAgoraToken(
       AgoraTokenQuery(
         token: userToken,
-        user_role_id: peerId,
         chanelName: channelName,
+        pree_id: int.parse(peerId),
       ),
     );
     await _engine.joinChannel(

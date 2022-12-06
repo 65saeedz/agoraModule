@@ -1,3 +1,6 @@
+import 'package:flutter/foundation.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+
 import '../models/agora_token_query.dart';
 import '../models/agora_token_response.dart';
 import 'package:dio/dio.dart';
@@ -11,13 +14,11 @@ class HttpClient {
     _dio = Dio(
       BaseOptions(baseUrl: _baseUrl),
     );
-    // if (kDebugMode) {
-    //   _dio.interceptors.add(
-    //     PrettyDioLogger(
-    //       maxWidth: 180,
-    //     ),
-    //   );
-    // }
+    if (kDebugMode) {
+      _dio.interceptors.add(
+        PrettyDioLogger(maxWidth: 180, responseBody: true, request: true),
+      );
+    }
   }
 
   Future<AgoraTokenResponse> fetchAgoraToken(AgoraTokenQuery query) async {
@@ -30,7 +31,7 @@ class HttpClient {
         (dioResponse.data as List).first as Map<String, dynamic>;
     final agoraTokenResponse =
         AgoraTokenResponse.fromMap(agoraTokenResponseList);
-
+    print(agoraTokenResponse);
     return agoraTokenResponse;
   }
 }
