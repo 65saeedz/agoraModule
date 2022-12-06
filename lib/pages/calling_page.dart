@@ -4,10 +4,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../models/enums/user_role.dart';
 import '../pages/video_call_page.dart';
 import '../widgets/caller_button.dart';
 import '../clients/agora_client.dart';
-import '../models/enums/enums.dart';
+import '../models/enums/call_type.dart';
 import '../pages/voice_call_page.dart';
 import '../controllers/audio/audio_controller.dart';
 import '../widgets/stack_profile_pic.dart';
@@ -20,6 +21,7 @@ class CallingPage extends StatefulWidget {
   final String peerName;
   final String peerImageUrl;
   final String channelName;
+  final String callId;
 
   const CallingPage({
     Key? key,
@@ -30,6 +32,7 @@ class CallingPage extends StatefulWidget {
     required this.peerName,
     required this.peerImageUrl,
     required this.channelName,
+    required this.callId,
   }) : super(key: key);
 
   @override
@@ -153,12 +156,12 @@ class _CallingPageState extends State<CallingPage> {
 
     audioController.stopTone();
     await agoraClient.receiveCall(
-      callType: widget.callType,
-      userId: widget.userId,
-      userToken: widget.userToken,
-      peerId: widget.peerId,
-      channelName: widget.channelName,
-    );
+        callType: widget.callType,
+        userId: widget.userId,
+        userToken: widget.userToken,
+        peerId: widget.peerId,
+        channelName: widget.channelName,
+        callId: widget.callId);
     if (mounted) {
       switch (widget.callType) {
         case CallType.voiceCall:
@@ -166,6 +169,7 @@ class _CallingPageState extends State<CallingPage> {
             context,
             MaterialPageRoute(
               builder: (context) => VoiceCallPage(
+                callId: widget.callId,
                 channelName: widget.channelName,
                 peerName: widget.peerName,
                 peerId: widget.peerId,
@@ -182,6 +186,7 @@ class _CallingPageState extends State<CallingPage> {
             context,
             MaterialPageRoute(
               builder: (context) => VideoCallPage(
+                callId: widget.callId,
                 channelName: widget.channelName,
                 peerName: widget.peerName,
                 peerId: widget.peerId,

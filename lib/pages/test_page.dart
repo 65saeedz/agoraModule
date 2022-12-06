@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../pages/video_call_page.dart';
+import '../models/enums/user_role.dart';
 import '../pages/voice_call_page.dart';
-import '../models/enums/enums.dart';
+import '../models/enums/call_type.dart';
 import '../pages/calling_snack.dart';
 import '../controllers/audio/audio_controller.dart';
 
@@ -29,6 +30,7 @@ class _TestPageState extends State<TestPage> {
   final user2ImageUrl =
       'https://baelm.net/wp-content/uploads/2014/06/aujrmetyazkenpzv6doe.jpg';
   final channelName = 'chat_149';
+  final callId = '638f13c5353c9b414d48782b';
   UserRole? userRole = UserRole.callMaker;
 
   final audioController = Get.put(AudioController());
@@ -106,22 +108,23 @@ class _TestPageState extends State<TestPage> {
               peerName: user2Name,
               peerImageUrl: user2ImageUrl,
               channelName: channelName,
+              callId: callId,
             ),
           ),
         );
         break;
 
       case UserRole.callReciver:
-        CallingSnack(
-          context,
-          callType: CallType.videoCall,
-          userId: user2Id,
-          userToken: user2Token,
-          peerId: user1Id,
-          peerName: user1Name,
-          peerImageUrl: user1ImageUrl,
-          channelName: channelName,
-        ).show();
+        CallingSnack(context,
+                callType: CallType.videoCall,
+                userId: user2Id,
+                userToken: user2Token,
+                peerId: user1Id,
+                peerName: user1Name,
+                peerImageUrl: user1ImageUrl,
+                channelName: channelName,
+                callId: callId)
+            .show();
         break;
 
       default:
@@ -142,22 +145,23 @@ class _TestPageState extends State<TestPage> {
               peerName: user2Name,
               peerImageUrl: user2ImageUrl,
               channelName: channelName,
+              callId: callId,
             ),
           ),
         );
         break;
 
       case UserRole.callReciver:
-        CallingSnack(
-          context,
-          callType: CallType.voiceCall,
-          userId: user2Id,
-          userToken: user2Token,
-          peerId: user1Id,
-          peerName: user1Name,
-          peerImageUrl: user1ImageUrl,
-          channelName: channelName,
-        ).show();
+        CallingSnack(context,
+                callType: CallType.voiceCall,
+                userId: user2Id,
+                userToken: user2Token,
+                peerId: user1Id,
+                peerName: user1Name,
+                peerImageUrl: user1ImageUrl,
+                channelName: channelName,
+                callId: callId)
+            .show();
         break;
 
       default:

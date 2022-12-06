@@ -1,5 +1,5 @@
 import 'package:agora15min/clients/agora_client.dart';
-import 'package:agora15min/models/enums/enums.dart';
+import 'package:agora15min/models/enums/call_type.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as rtc_local_value;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as rtc_remote_value;
@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../controllers/audio/audio_controller.dart';
+import '../models/enums/user_role.dart';
 import '../widgets/caller_button.dart';
 import '../widgets/custom_fab.dart';
 import '../widgets/timerbox.dart';
@@ -23,6 +24,7 @@ class VideoCallPage extends StatefulWidget {
     required this.peerName,
     required this.peerImageUrl,
     required this.channelName,
+    required this.callId,
   });
 
   final UserRole userRole;
@@ -32,6 +34,7 @@ class VideoCallPage extends StatefulWidget {
   final String peerName;
   final String peerImageUrl;
   final String channelName;
+  final String callId;
 
   final agoraClient = AgoraClient();
   final timerController = CustomTimerController();
@@ -98,6 +101,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
         userToken: widget.userToken,
         peerId: widget.peerId,
         channelName: widget.channelName,
+        callId:widget.callId,
       );
     }
     setState(() {});

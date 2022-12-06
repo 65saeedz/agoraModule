@@ -1,3 +1,4 @@
+import 'package:agora15min/models/accept_call_query.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
@@ -31,7 +32,18 @@ class HttpClient {
         (dioResponse.data as List).first as Map<String, dynamic>;
     final agoraTokenResponse =
         AgoraTokenResponse.fromMap(agoraTokenResponseList);
-    print(agoraTokenResponse);
     return agoraTokenResponse;
+  }
+
+  Future<bool> setCallingStatus(AcceptCallQuery query) async {
+    try {
+      await _dio.get(
+        '/calling',
+        queryParameters: query.toJson(),
+      );
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }

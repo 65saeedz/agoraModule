@@ -1,10 +1,11 @@
+import 'package:agora15min/models/accept_call_query.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../clients/http_client.dart';
 import '../models/agora_token_query.dart';
-import '../models/enums/enums.dart';
+import '../models/enums/call_type.dart';
 import '../controllers/audio/audio_controller.dart';
 
 class AgoraClient {
@@ -50,6 +51,7 @@ class AgoraClient {
     required String userToken,
     required String peerId,
     required String channelName,
+    required String callId,
   }) async {
     await _handlePermissions(callType: callType);
     await _initialize(callType: callType);
@@ -67,7 +69,9 @@ class AgoraClient {
       null,
       int.parse(userId),
     );
-
+    _httpClient.setCallingStatus(
+      AcceptCallQuery(token: userToken, callId: callId),
+    );
     return _engine;
   }
 

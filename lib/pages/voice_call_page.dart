@@ -5,7 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../clients/agora_client.dart';
-import '../models/enums/enums.dart';
+import '../models/enums/user_role.dart';
+import '../models/enums/call_type.dart';
 import '../widgets/stack_profile_pic.dart';
 import '../controllers/audio/audio_controller.dart';
 import '../widgets/caller_button.dart';
@@ -22,6 +23,7 @@ class VoiceCallPage extends StatefulWidget {
     required this.peerName,
     required this.peerImageUrl,
     required this.channelName,
+    required this.callId,
   });
 
   final UserRole userRole;
@@ -31,6 +33,7 @@ class VoiceCallPage extends StatefulWidget {
   final String peerName;
   final String peerImageUrl;
   final String channelName;
+  final String callId;
 
   final agoraClient = AgoraClient();
   final timerController = CustomTimerController();
@@ -94,7 +97,9 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
           userId: widget.userId,
           userToken: widget.userToken,
           peerId: widget.peerId,
-          channelName: widget.channelName);
+          channelName: widget.channelName,
+          callId:widget. callId,
+          );
     }
 
     setState(() {});

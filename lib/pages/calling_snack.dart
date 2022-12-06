@@ -4,10 +4,11 @@ import 'package:get/get.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 import '../pages/calling_page.dart';
+import '../models/enums/user_role.dart';
 import '../controllers/audio/audio_controller.dart';
 import '../pages/video_call_page.dart';
 import '../pages/voice_call_page.dart';
-import '../models/enums/enums.dart';
+import '../models/enums/call_type.dart';
 
 class CallingSnack {
   final BuildContext context;
@@ -18,6 +19,7 @@ class CallingSnack {
   final String peerName;
   final String peerImageUrl;
   final String channelName;
+  final String callId;
 
   late AnimationController _animationController;
 
@@ -30,6 +32,7 @@ class CallingSnack {
     required this.peerName,
     required this.peerImageUrl,
     required this.channelName,
+    required this.callId,
   });
   final audioController = Get.find<AudioController>();
 
@@ -180,6 +183,7 @@ class CallingSnack {
           peerImageUrl: peerImageUrl,
           peerName: peerName,
           channelName: channelName,
+          callId: callId,
         ),
       ),
     );
@@ -199,6 +203,7 @@ class CallingSnack {
               userId: userId,
               peerName: peerName,
               peerImageUrl: peerImageUrl,
+              callId: callId,
             ),
           ),
         );
@@ -215,6 +220,7 @@ class CallingSnack {
               userId: userId,
               peerName: peerName,
               peerImageUrl: peerImageUrl,
+              callId: callId,
             ),
           ),
         );
