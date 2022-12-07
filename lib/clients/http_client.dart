@@ -1,10 +1,11 @@
-import 'package:agora15min/models/accept_call_query.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
-
-import '../models/agora_token_query.dart';
-import '../models/agora_token_response.dart';
 import 'package:dio/dio.dart';
+
+import '/models/accept_call_query.dart';
+import '/models/cancel_call_query.dart';
+import '/models/agora_token_query.dart';
+import '/models/agora_token_response.dart';
 
 class HttpClient {
   final _baseUrl = 'http://65.21.119.84:2021';
@@ -39,6 +40,19 @@ class HttpClient {
     try {
       await _dio.get(
         '/calling',
+        queryParameters: query.toJson(),
+      );
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+
+    Future<bool> cancelCallingStatus(CancelCallQuery query) async {
+    try {
+      await _dio.get(
+        '/cancel_call',
         queryParameters: query.toJson(),
       );
       return true;
