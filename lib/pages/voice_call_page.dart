@@ -93,13 +93,13 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
       );
     } else {
       _agoraEngine = await widget.agoraClient.receiveCall(
-          callType: CallType.voiceCall,
-          userId: widget.userId,
-          userToken: widget.userToken,
-          peerId: widget.peerId,
-          channelName: widget.channelName,
-          callId:widget. callId,
-          );
+        callType: CallType.voiceCall,
+        userId: widget.userId,
+        userToken: widget.userToken,
+        peerId: widget.peerId,
+        channelName: widget.channelName,
+        callId: widget.callId,
+      );
     }
 
     setState(() {});
@@ -140,6 +140,8 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
             final info = 'user offline:$uid';
             _infostring.add(info);
             _users.clear();
+            Future.delayed(Duration(seconds: 3))
+                .then((Value) => Navigator.pop(context));
           });
         },
         firstRemoteVideoFrame: (uid, width, height, elapsed) {

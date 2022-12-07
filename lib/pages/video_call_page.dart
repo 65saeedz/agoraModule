@@ -82,9 +82,8 @@ class _VideoCallPageState extends State<VideoCallPage> {
       _agoraEngine!.leaveChannel();
       _agoraEngine!.destroy();
     }
-
-    super.dispose();
     Wakelock.disable();
+    super.dispose();
   }
 
   Future<void> _initialize() async {
@@ -149,7 +148,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
             final info = 'user offline:$uid';
             _infostring.add(info);
             _users.clear();
-            Future.delayed(Duration(seconds: 2))
+            Future.delayed(Duration(seconds: 3))
                 .then((Value) => Navigator.pop(context));
           });
         },
