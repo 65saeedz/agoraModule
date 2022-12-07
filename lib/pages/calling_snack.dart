@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
+import 'package:vibration/vibration.dart';
 
 import '../pages/calling_page.dart';
 import '../models/enums/user_role.dart';
@@ -34,11 +35,19 @@ class CallingSnack {
     required this.channelName,
     required this.callId,
   });
-  final audioController = Get.find<AudioController>();
+  final AudioController audioController = Get.put(AudioController());
 
   void show() {
     audioController.playRingTone();
-
+    Vibration.vibrate(
+        pattern: List.generate(100, (index) {
+      if (index == 0) {
+        return 5;
+      } else if (index.isOdd) {
+        return 2800;
+      } else
+        return 1800;
+    }));
     showTopSnackBar(
       Overlay.of(context)!,
       _buildChild(),
@@ -118,6 +127,7 @@ class CallingSnack {
               onTap: () {
                 _animationController.reverse();
                 audioController.stopTone();
+                Vibration.cancel();
               },
               child: Container(
                 padding: EdgeInsets.all(7),
@@ -142,6 +152,7 @@ class CallingSnack {
               onTap: () {
                 _animationController.reverse();
 
+                Vibration.cancel();
                 _onAccepted();
               },
               child: Container(

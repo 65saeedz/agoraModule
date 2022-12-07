@@ -1,13 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../pages/video_call_page.dart';
 import '../models/enums/user_role.dart';
 import '../pages/voice_call_page.dart';
 import '../models/enums/call_type.dart';
 import '../pages/calling_snack.dart';
-import '../controllers/audio/audio_controller.dart';
 
 class TestPage extends StatefulWidget {
   const TestPage({super.key});
@@ -33,7 +31,6 @@ class _TestPageState extends State<TestPage> {
   final callId = '638f13c5353c9b414d48782b';
   UserRole? userRole = UserRole.callMaker;
 
-  final audioController = Get.put(AudioController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(

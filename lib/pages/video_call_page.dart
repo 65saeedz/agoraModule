@@ -1,5 +1,3 @@
-import 'package:agora15min/clients/agora_client.dart';
-import 'package:agora15min/models/enums/call_type.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as rtc_local_value;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as rtc_remote_value;
@@ -7,7 +5,10 @@ import 'package:custom_timer/custom_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:wakelock/wakelock.dart';
 
+import '../clients/agora_client.dart';
+import '../models/enums/call_type.dart';
 import '../controllers/audio/audio_controller.dart';
 import '../models/enums/user_role.dart';
 import '../widgets/caller_button.dart';
@@ -38,7 +39,7 @@ class VideoCallPage extends StatefulWidget {
 
   final agoraClient = AgoraClient();
   final timerController = CustomTimerController();
-  final audioController = Get.find<AudioController>();
+  final AudioController audioController = Get.put(AudioController());
 
   @override
   State<VideoCallPage> createState() => _VideoCallPageState();
@@ -83,6 +84,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
     }
 
     super.dispose();
+    Wakelock.disable();
   }
 
   Future<void> _initialize() async {
@@ -101,7 +103,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
         userToken: widget.userToken,
         peerId: widget.peerId,
         channelName: widget.channelName,
-        callId:widget.callId,
+        callId: widget.callId,
       );
     }
     setState(() {});
@@ -160,7 +162,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
-
+    Wakelock.enable();
     return Scaffold(
       backgroundColor: const Color(0xff26263F),
       body: Stack(

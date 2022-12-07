@@ -37,7 +37,7 @@ class VoiceCallPage extends StatefulWidget {
 
   final agoraClient = AgoraClient();
   final timerController = CustomTimerController();
-  final audioController = Get.find<AudioController>();
+  final AudioController audioController = Get.put(AudioController());
 
   @override
   State<VoiceCallPage> createState() => _VoiceCallPageState();

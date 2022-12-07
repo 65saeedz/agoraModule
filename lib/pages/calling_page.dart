@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:vibration/vibration.dart';
+import 'package:wakelock/wakelock.dart';
 
 import '../models/enums/user_role.dart';
 import '../pages/video_call_page.dart';
@@ -40,7 +42,7 @@ class CallingPage extends StatefulWidget {
 }
 
 class _CallingPageState extends State<CallingPage> {
-  AudioController audioController = Get.find();
+  final AudioController _audioController = Get.put(AudioController());
 
   @override
   void initState() {
@@ -63,12 +65,13 @@ class _CallingPageState extends State<CallingPage> {
         DeviceOrientation.landscapeRight,
       ],
     );
-
+    Wakelock.disable();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    Wakelock.enable();
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
 
@@ -135,7 +138,8 @@ class _CallingPageState extends State<CallingPage> {
               CallerButton(
                 func: () {
                   Navigator.of(context).pop();
-                  audioController.stopTone();
+                  _audioController.stopTone();
+                  Vibration.cancel();
                 },
                 color: Color(0xffFF4647),
                 imageIconAddress: 'assets/images/Call.png',
@@ -153,8 +157,9 @@ class _CallingPageState extends State<CallingPage> {
 
   Future<void> _onAccepted() async {
     final agoraClient = AgoraClient();
+    Vibration.cancel();
 
-    audioController.stopTone();
+    _audioController.stopTone();
     await agoraClient.receiveCall(
         callType: widget.callType,
         userId: widget.userId,

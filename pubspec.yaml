@@ -24,6 +24,10 @@ dependencies:
   cached_network_image: ^3.2.2
   top_snackbar_flutter: ^3.0.0
   get: ^4.6.5
+  wakelock: ^0.6.2
+  proximity_sensor: ^1.0.4
+  turn_off_screen: ^0.0.4
+  vibration: ^1.7.6
 
 dev_dependencies:
   flutter_test:

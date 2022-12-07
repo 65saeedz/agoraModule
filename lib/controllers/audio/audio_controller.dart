@@ -19,7 +19,7 @@ class AudioController extends GetxController {
     _player.setAndroidAudioAttributes(
       AndroidAudioAttributes(
         contentType: AndroidAudioContentType.speech,
-        usage: AndroidAudioUsage.voiceCommunicationSignalling,
+        usage: AndroidAudioUsage.voiceCommunication,
       ),
     );
     _playTone("assets/audios/calling.mp3");

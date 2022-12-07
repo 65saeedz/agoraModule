@@ -34,7 +34,7 @@ class AgoraTokenResponse {
     return AgoraTokenResponse(
       chanelName: map['chanelName'],
       token: map['token'],
-      call_id: map['call_id'],
+      call_id: map['call_id'].toString(),
     );
   }
   String toJson() => json.encode(toMap());
