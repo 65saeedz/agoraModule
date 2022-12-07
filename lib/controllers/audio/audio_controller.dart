@@ -15,7 +15,7 @@ class AudioController extends GetxController {
     super.onClose();
   }
 
-  playCallingToneAudio() {
+  playCallingToneVideo() {
     _player.setAndroidAudioAttributes(
       AndroidAudioAttributes(
         contentType: AndroidAudioContentType.speech,
@@ -25,7 +25,7 @@ class AudioController extends GetxController {
     _playTone("assets/audios/calling.mp3");
   }
 
-  playCallingToneVideo() {
+  playCallingToneAudio() {
     _player.setAndroidAudioAttributes(
       AndroidAudioAttributes(
         contentType: AndroidAudioContentType.unknown,

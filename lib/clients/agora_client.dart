@@ -11,7 +11,7 @@ import '../controllers/audio/audio_controller.dart';
 class AgoraClient {
   final _appId = 'a5b85475a1e34748a324db9d58622d98';
   final _httpClient = HttpClient();
-  final AudioController _audioController = Get.find();
+  final AudioController _audioController = Get.put(AudioController());
 
   late RtcEngine _engine;
 

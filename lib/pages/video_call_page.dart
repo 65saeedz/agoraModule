@@ -123,12 +123,10 @@ class _VideoCallPageState extends State<VideoCallPage> {
             _channel = channel;
           });
         },
-        leaveChannel: (stats) {
+        firstRemoteVideoFrame: (uid, width, height, elapsed) {
           setState(() {
-            _infostring.add('leave channel');
-            _users.clear();
-            // Future.delayed(Duration(seconds: 5))
-            //     .then((Value) => Navigator.pop(context));
+            final info = 'first remote video :$uid $width *$height';
+            _infostring.add(info);
           });
         },
         userJoined: (uid, elapsed) {
@@ -140,17 +138,19 @@ class _VideoCallPageState extends State<VideoCallPage> {
             widget.audioController.stopTone();
           });
         },
+        leaveChannel: (stats) {
+          setState(() {
+            _infostring.add('leave channel');
+            _users.clear();
+            Future.delayed(Duration(seconds: 5))
+                .then((Value) => Navigator.pop(context));
+          });
+        },
         userOffline: (uid, elapsed) {
           setState(() {
             final info = 'user offline:$uid';
             _infostring.add(info);
             _users.clear();
-          });
-        },
-        firstRemoteVideoFrame: (uid, width, height, elapsed) {
-          setState(() {
-            final info = 'first remote video :$uid $width *$height';
-            _infostring.add(info);
           });
         },
       ),
