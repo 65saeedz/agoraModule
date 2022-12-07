@@ -42,7 +42,7 @@ class CallingPage extends StatefulWidget {
 }
 
 class _CallingPageState extends State<CallingPage> {
-  final AudioController _audioController = Get.put(AudioController());
+  final AudioController _audioController = Get.find();
 
   @override
   void initState() {
