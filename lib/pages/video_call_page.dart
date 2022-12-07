@@ -142,8 +142,6 @@ class _VideoCallPageState extends State<VideoCallPage> {
           setState(() {
             _infostring.add('leave channel');
             _users.clear();
-            Future.delayed(Duration(seconds: 5))
-                .then((Value) => Navigator.pop(context));
           });
         },
         userOffline: (uid, elapsed) {
@@ -151,6 +149,8 @@ class _VideoCallPageState extends State<VideoCallPage> {
             final info = 'user offline:$uid';
             _infostring.add(info);
             _users.clear();
+            Future.delayed(Duration(seconds: 2))
+                .then((Value) => Navigator.pop(context));
           });
         },
       ),
