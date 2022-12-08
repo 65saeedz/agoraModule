@@ -43,6 +43,7 @@ class CallingPage extends StatefulWidget {
 
 class _CallingPageState extends State<CallingPage> {
   final AudioController _audioController = Get.find();
+  AgoraClient agoraClient = AgoraClient();
 
   @override
   void initState() {
@@ -140,6 +141,8 @@ class _CallingPageState extends State<CallingPage> {
                   Navigator.of(context).pop();
                   _audioController.stopTone();
                   Vibration.cancel();
+                  agoraClient.cancelFromReceiver(
+                      token: widget.userToken, receiverCallId: widget.callId);
                 },
                 color: Color(0xffFF4647),
                 imageIconAddress: 'assets/images/Call.png',

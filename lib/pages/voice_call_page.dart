@@ -49,6 +49,7 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
   final _infostring = <String>[];
   bool _muted = false;
   bool _onSpeaker = false;
+  bool isAnyUserJoined = false;
 
   @override
   void initState() {
@@ -238,8 +239,14 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
                   CallerButton(
                     color: const Color(0xffFF4647),
                     func: () {
-                      Navigator.of(context).pop();
-                      widget.audioController.stopTone();
+                     widget.audioController.stopTone();
+                    if (isAnyUserJoined == false) {
+                      // print('userToken is : ${widget.httpClient.userToken}' +
+                      //     'call id is: ${widget.httpClient.callId}');
+                      print('No one joined');
+                      widget.agoraClient.cancelFromCaller();
+                    }
+                    Navigator.of(context).pop();
                     },
                     imageIconAddress: 'assets/images/Call.png',
                   ),

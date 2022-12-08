@@ -1,3 +1,4 @@
+import 'package:agora15min/clients/agora_client.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -36,6 +37,7 @@ class CallingSnack {
     required this.callId,
   });
   final AudioController audioController = Get.put(AudioController());
+  AgoraClient agoraClient = AgoraClient();
 
   void show() {
     audioController.playRingTone();
@@ -128,6 +130,8 @@ class CallingSnack {
                 _animationController.reverse();
                 audioController.stopTone();
                 Vibration.cancel();
+                agoraClient.cancelFromReceiver(
+                    token: userToken, receiverCallId: callId);
               },
               child: Container(
                 padding: EdgeInsets.all(7),

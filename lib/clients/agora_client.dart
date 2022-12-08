@@ -1,8 +1,9 @@
-import 'package:agora15min/models/accept_call_query.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../models/accept_call_query.dart';
+import '../models/cancel_call_query.dart';
 import '../clients/http_client.dart';
 import '../models/agora_token_query.dart';
 import '../models/enums/call_type.dart';
@@ -73,6 +74,16 @@ class AgoraClient {
       AcceptCallQuery(token: userToken, callId: callId),
     );
     return _engine;
+  }
+
+  void cancelFromCaller() {
+    _httpClient.cancelCallFromCaller();
+  }
+
+  void cancelFromReceiver(
+      {required String receiverCallId, required String token}) {
+    _httpClient.cancelCallFromReceiver(
+        receiverCallId: receiverCallId, token: token);
   }
 
   Future<void> _handlePermissions({

@@ -1,3 +1,4 @@
+
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as rtc_local_value;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as rtc_remote_value;
@@ -52,9 +53,11 @@ class _VideoCallPageState extends State<VideoCallPage> {
   String? _channel;
   bool _muted = false;
   bool _videoOff = false;
+  bool isAnyUserJoined = false;
 
   @override
   void initState() {
+    print(widget.callId);
     SystemChrome.setPreferredOrientations(
       [
         DeviceOrientation.portraitUp,
@@ -132,9 +135,10 @@ class _VideoCallPageState extends State<VideoCallPage> {
           setState(() {
             final info = 'user joined:$uid';
             _infostring.add(info);
-            _users.add(uid);
             widget.timerController.start();
             widget.audioController.stopTone();
+            _users.add(uid);
+            isAnyUserJoined = true;
           });
         },
         leaveChannel: (stats) {
@@ -327,6 +331,12 @@ class _VideoCallPageState extends State<VideoCallPage> {
                   color: const Color(0xffFF4647),
                   func: () {
                     widget.audioController.stopTone();
+                    if (isAnyUserJoined == false) {
+                      // print('userToken is : ${widget.httpClient.userToken}' +
+                      //     'call id is: ${widget.httpClient.callId}');
+                      print('No one joined');
+                      widget.agoraClient.cancelFromCaller();
+                    }
                     Navigator.of(context).pop();
                   },
                   imageIconAddress: 'assets/images/Call.png',
