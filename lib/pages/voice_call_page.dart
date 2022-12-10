@@ -106,6 +106,14 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
     setState(() {});
     _agoraEngine!.setEventHandler(
       RtcEngineEventHandler(
+        audioDeviceStateChanged: ((deviceId, deviceType, deviceState) {
+          print(deviceId);
+        }),
+        audioRouteChanged: (routing) {
+          setState(() {
+            print(routing);
+          });
+        },
         error: (code) {
           setState(() {
             final info = 'error :$code';
@@ -239,14 +247,14 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
                   CallerButton(
                     color: const Color(0xffFF4647),
                     func: () {
-                     widget.audioController.stopTone();
-                    if (isAnyUserJoined == false) {
-                      // print('userToken is : ${widget.httpClient.userToken}' +
-                      //     'call id is: ${widget.httpClient.callId}');
-                      print('No one joined');
-                      widget.agoraClient.cancelFromCaller();
-                    }
-                    Navigator.of(context).pop();
+                      widget.audioController.stopTone();
+                      if (isAnyUserJoined == false) {
+                        // print('userToken is : ${widget.httpClient.userToken}' +
+                        //     'call id is: ${widget.httpClient.callId}');
+                        print('No one joined');
+                        widget.agoraClient.cancelFromCaller();
+                      }
+                      Navigator.of(context).pop();
                     },
                     imageIconAddress: 'assets/images/Call.png',
                   ),

@@ -1,4 +1,3 @@
-
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as rtc_local_value;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as rtc_remote_value;
@@ -112,6 +111,14 @@ class _VideoCallPageState extends State<VideoCallPage> {
 
     _agoraEngine!.setEventHandler(
       RtcEngineEventHandler(
+        audioDeviceStateChanged: ((deviceId, deviceType, deviceState) {
+          print(deviceId);
+        }),
+        audioRouteChanged: (routing) {
+          setState(() {
+            print(routing);
+          });
+        },
         error: (code) {
           setState(() {
             final info = 'error :$code';
@@ -160,7 +167,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
     );
 
     _agoraEngine!.setEnableSpeakerphone(true);
-    _agoraEngine!.setDefaultAudioRouteToSpeakerphone(true);
+    // _agoraEngine!.setDefaultAudioRouteToSpeakerphone();
   }
 
   @override
