@@ -53,6 +53,11 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
 
   @override
   void initState() {
+    Future.delayed(Duration(seconds: 60)).then((value) {
+      if (isAnyUserJoined == false) {
+        endCall();
+      }
+    });
     SystemChrome.setPreferredOrientations(
       [
         DeviceOrientation.portraitUp,
@@ -135,6 +140,7 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
         },
         userJoined: (uid, elapsed) {
           setState(() {
+            isAnyUserJoined = true;
             final info = 'user joined:$uid';
             _infostring.add(info);
             _users.add(uid);
@@ -246,16 +252,7 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
                             }),
                   CallerButton(
                     color: const Color(0xffFF4647),
-                    func: () {
-                      widget.audioController.stopTone();
-                      if (isAnyUserJoined == false) {
-                        // print('userToken is : ${widget.httpClient.userToken}' +
-                        //     'call id is: ${widget.httpClient.callId}');
-                        print('No one joined');
-                        widget.agoraClient.cancelFromCaller();
-                      }
-                      Navigator.of(context).pop();
-                    },
+                    func: endCall,
                     imageIconAddress: 'assets/images/Call.png',
                   ),
                   CustomFAB(
@@ -278,5 +275,16 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
         ),
       ),
     );
+  }
+
+  void endCall() {
+    widget.audioController.stopTone();
+    if (isAnyUserJoined == false) {
+      // print('userToken is : ${widget.httpClient.userToken}' +
+      //     'call id is: ${widget.httpClient.callId}');
+      print('No one joined');
+      widget.agoraClient.cancelFromCaller();
+    }
+    Navigator.of(context).pop();
   }
 }

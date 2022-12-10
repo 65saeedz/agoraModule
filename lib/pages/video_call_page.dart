@@ -56,6 +56,11 @@ class _VideoCallPageState extends State<VideoCallPage> {
 
   @override
   void initState() {
+    Future.delayed(Duration(seconds: 60)).then((value) {
+      if (isAnyUserJoined == false) {
+        endCall();
+      }
+    });
     print(widget.callId);
     SystemChrome.setPreferredOrientations(
       [
@@ -140,12 +145,12 @@ class _VideoCallPageState extends State<VideoCallPage> {
         },
         userJoined: (uid, elapsed) {
           setState(() {
+            isAnyUserJoined = true;
             final info = 'user joined:$uid';
             _infostring.add(info);
             widget.timerController.start();
             widget.audioController.stopTone();
             _users.add(uid);
-            isAnyUserJoined = true;
           });
         },
         leaveChannel: (stats) {
@@ -336,16 +341,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
                 ),
                 CallerButton(
                   color: const Color(0xffFF4647),
-                  func: () {
-                    widget.audioController.stopTone();
-                    if (isAnyUserJoined == false) {
-                      // print('userToken is : ${widget.httpClient.userToken}' +
-                      //     'call id is: ${widget.httpClient.callId}');
-                      print('No one joined');
-                      widget.agoraClient.cancelFromCaller();
-                    }
-                    Navigator.of(context).pop();
-                  },
+                  func: endCall,
                   imageIconAddress: 'assets/images/Call.png',
                 ),
               ],
@@ -354,5 +350,16 @@ class _VideoCallPageState extends State<VideoCallPage> {
         ],
       ),
     );
+  }
+
+  void endCall() {
+    widget.audioController.stopTone();
+    if (isAnyUserJoined == false) {
+      // print('userToken is : ${widget.httpClient.userToken}' +
+      //     'call id is: ${widget.httpClient.callId}');
+      print('No one joined');
+      widget.agoraClient.cancelFromCaller();
+    }
+    Navigator.of(context).pop();
   }
 }
