@@ -55,24 +55,23 @@ class CallingSnack {
         },
       ),
     );
-    Future.delayed(
-      Duration(
-        seconds: 10,
-      ),
-    ).then((value) {
-      if (isResponsed == false && isInCallingPage == true) {
-        audioController.stopTone();
-        Vibration.cancel();
-        agoraClient.cancelFromReceiver(
-            token: userToken, receiverCallId: callId);
-        Navigator.pop(context);
-      }
-      if (isResponsed == false) {
-        onReject();
-      }
-      print(isResponsed);
-      print(isInCallingPage);
-    });
+    // timer part:
+    // Future.delayed(
+    //   Duration(
+    //     seconds: 60,
+    //   ),
+    // ).then((value) {
+    //   if (isResponsed == false && isInCallingPage == true) {
+    //     audioController.stopTone();
+    //     Vibration.cancel();
+    //     agoraClient.cancelFromReceiver(
+    //         token: userToken, receiverCallId: callId);
+    //     Navigator.pop(context);
+    //   }
+    //   if (isResponsed == false) {
+    //     onReject();
+    //   }
+    // });
     showTopSnackBar(
       Overlay.of(context)!,
       _buildChild(),
@@ -271,5 +270,17 @@ class CallingSnack {
     audioController.stopTone();
     Vibration.cancel();
     agoraClient.cancelFromReceiver(token: userToken, receiverCallId: callId);
+  }
+
+  void dismissSnackBar() {
+    if (isResponsed == false && isInCallingPage == true) {
+      audioController.stopTone();
+      Vibration.cancel();
+      agoraClient.cancelFromReceiver(token: userToken, receiverCallId: callId);
+      Navigator.pop(context);
+    }
+    if (isResponsed == false) {
+      onReject();
+    }
   }
 }

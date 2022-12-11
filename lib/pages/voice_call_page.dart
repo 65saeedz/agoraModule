@@ -32,8 +32,8 @@ class VoiceCallPage extends StatefulWidget {
   final String peerId;
   final String peerName;
   final String peerImageUrl;
-  final String channelName;
-  final String callId;
+  final String? channelName;
+  final String ?callId;
 
   final agoraClient = AgoraClient();
   final timerController = CustomTimerController();
@@ -103,8 +103,8 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
         userId: widget.userId,
         userToken: widget.userToken,
         peerId: widget.peerId,
-        channelName: widget.channelName,
-        callId: widget.callId,
+        channelName: widget.channelName!,
+        callId: widget.callId!,
       );
     }
 

@@ -24,8 +24,8 @@ class VideoCallPage extends StatefulWidget {
     required this.peerId,
     required this.peerName,
     required this.peerImageUrl,
-    required this.channelName,
-    required this.callId,
+     this.channelName,
+     this.callId,
   });
 
   final UserRole userRole;
@@ -34,8 +34,8 @@ class VideoCallPage extends StatefulWidget {
   final String peerId;
   final String peerName;
   final String peerImageUrl;
-  final String channelName;
-  final String callId;
+  final String? channelName;
+  final String? callId;
 
   final agoraClient = AgoraClient();
   final timerController = CustomTimerController();
@@ -108,8 +108,8 @@ class _VideoCallPageState extends State<VideoCallPage> {
         userId: widget.userId,
         userToken: widget.userToken,
         peerId: widget.peerId,
-        channelName: widget.channelName,
-        callId: widget.callId,
+        channelName: widget.channelName!,
+        callId: widget.callId!,
       );
     }
     setState(() {});
@@ -172,7 +172,6 @@ class _VideoCallPageState extends State<VideoCallPage> {
     );
 
     _agoraEngine!.setEnableSpeakerphone(true);
-    // _agoraEngine!.setDefaultAudioRouteToSpeakerphone();
   }
 
   @override
