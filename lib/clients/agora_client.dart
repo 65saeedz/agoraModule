@@ -1,9 +1,7 @@
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
-
 import '../models/accept_call_query.dart';
-import '../models/cancel_call_query.dart';
 import '../clients/http_client.dart';
 import '../models/agora_token_query.dart';
 import '../models/enums/call_type.dart';

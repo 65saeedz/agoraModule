@@ -38,18 +38,41 @@ class CallingSnack {
   });
   final AudioController audioController = Get.put(AudioController());
   AgoraClient agoraClient = AgoraClient();
-
+  bool isResponsed = false;
+  bool isInCallingPage = false;
   void show() {
     audioController.playRingTone();
     Vibration.vibrate(
-        pattern: List.generate(100, (index) {
-      if (index == 0) {
-        return 5;
-      } else if (index.isOdd) {
-        return 2800;
-      } else
-        return 1800;
-    }));
+      pattern: List.generate(
+        100,
+        (index) {
+          if (index == 0) {
+            return 5;
+          } else if (index.isOdd) {
+            return 2800;
+          } else
+            return 1800;
+        },
+      ),
+    );
+    Future.delayed(
+      Duration(
+        seconds: 10,
+      ),
+    ).then((value) {
+      if (isResponsed == false && isInCallingPage == true) {
+        audioController.stopTone();
+        Vibration.cancel();
+        agoraClient.cancelFromReceiver(
+            token: userToken, receiverCallId: callId);
+        Navigator.pop(context);
+      }
+      if (isResponsed == false) {
+        onReject();
+      }
+      print(isResponsed);
+      print(isInCallingPage);
+    });
     showTopSnackBar(
       Overlay.of(context)!,
       _buildChild(),
@@ -127,11 +150,8 @@ class CallingSnack {
             Spacer(),
             GestureDetector(
               onTap: () {
-                _animationController.reverse();
-                audioController.stopTone();
-                Vibration.cancel();
-                agoraClient.cancelFromReceiver(
-                    token: userToken, receiverCallId: callId);
+                isResponsed = true;
+                onReject();
               },
               child: Container(
                 padding: EdgeInsets.all(7),
@@ -185,6 +205,7 @@ class CallingSnack {
   }
 
   void _onTap() {
+    isInCallingPage = true;
     _animationController.reverse();
 
     Navigator.push(
@@ -205,6 +226,7 @@ class CallingSnack {
   }
 
   void _onAccepted() {
+    isResponsed = true;
     switch (callType) {
       case CallType.voiceCall:
         Navigator.push(
@@ -242,5 +264,12 @@ class CallingSnack {
         break;
     }
     audioController.stopTone();
+  }
+
+  void onReject() {
+    _animationController.reverse();
+    audioController.stopTone();
+    Vibration.cancel();
+    agoraClient.cancelFromReceiver(token: userToken, receiverCallId: callId);
   }
 }
